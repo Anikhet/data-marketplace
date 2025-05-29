@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 import { Listing } from '@/lib/types';
+import { mockListings } from '@/lib/mock-data';
 
 export function useListings() {
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [listings, setListings] = useState<Listing[]>(mockListings);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -10,13 +11,30 @@ export function useListings() {
     setIsLoading(true);
     setError(null);
     try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/listings');
-      if (!response.ok) throw new Error('Failed to fetch listings');
-      const data = await response.json();
-      setListings(data);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setListings(mockListings);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError('Failed to fetch listings');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const searchListings = useCallback(async (query: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const filtered = mockListings.filter(listing => 
+        listing.title.toLowerCase().includes(query.toLowerCase()) ||
+        listing.description.toLowerCase().includes(query.toLowerCase()) ||
+        listing.industry.toLowerCase().includes(query.toLowerCase())
+      );
+      setListings(filtered);
+    } catch (err) {
+      setError('Failed to search listings');
     } finally {
       setIsLoading(false);
     }
@@ -91,6 +109,7 @@ export function useListings() {
     isLoading,
     error,
     fetchListings,
+    searchListings,
     createListing,
     updateListing,
     deleteListing,

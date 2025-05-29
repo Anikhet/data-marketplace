@@ -3,11 +3,21 @@
  */
 
 // Listing Types
-export type ListingMetadata = {
-  niche: string;
-  source: string;
-  freshness: string;
-  exclusivityLevel: string;
+export interface Listing {
+  id: string;
+  title: string;
+  description: string;
+  industry: string;
+  jobTitle: string;
+  volume: string;
+  type: string;
+  price: number;
+  isVerified: boolean;
+  seller: {
+    id: string;
+    name: string;
+    rating: number;
+  };
 }
 
 export type PreviewRecord = {
@@ -21,19 +31,6 @@ export type ListingStats = {
   rating: number;
   lastSoldCount: number;
   qualityScore: number;
-}
-
-export type Listing = {
-  id: string;
-  title: string;
-  description: string;
-  metadata: ListingMetadata;
-  previewRecords: PreviewRecord[];
-  stats: ListingStats;
-  status: 'active' | 'pending' | 'rejected';
-  price: number;
-  requests: number;
-  lastUpdated: string;
 }
 
 // Seller Dashboard Types
@@ -91,7 +88,7 @@ export type Download = {
 }
 
 // Filter Types
-export type FilterState = {
+export interface FilterState {
   industry: string[];
   jobTitle: string[];
   volume: string;
