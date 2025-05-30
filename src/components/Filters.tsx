@@ -42,10 +42,10 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   ];
 
   const listTypes = [
-    'Email Lists',
-    'Phone Lists',
-    'Company Lists',
-    'Custom Lists',
+    'Email',
+    'Phone',
+    'LinkedIn',
+    'Custom',
   ];
 
   const handleFilterChange = (key: keyof FilterState, value: FilterState[keyof FilterState]) => {

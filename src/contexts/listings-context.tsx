@@ -63,8 +63,9 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
           listing.jobTitle,
           listing.seller.name,
           listing.type,
-          listing.volume
-        ].map(text => text.toLowerCase()).join(' ');
+          listing.volume,
+          // listing.isVerified
+        ].map(text => String(text).toLowerCase()).join(' ');
 
         return searchTerms.every(term => searchableText.includes(term));
       });
