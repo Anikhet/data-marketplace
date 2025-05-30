@@ -1,54 +1,14 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
 import { useListings } from '@/hooks/useListings';
-import { useFilters } from '@/hooks/useFilters';
-import { toast } from 'sonner';
-import { Listing } from '@/lib/types';
 import { HeroSection } from './home/HeroSection';
 import SearchSection from './home/SearchSection';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+// import { useListings } from './../useListings';
 
 export default function Home() {
-  const { listings, isLoading, error, fetchListings, searchListings } = useListings();
-  const [filteredListings, setFilteredListings] = useState<Listing[]>(listings);
-  const { isFiltering } = useFilters();
-
-  // Initialize filteredListings when listings change
-  useEffect(() => {
-    setFilteredListings(listings);
-  }, [listings]);
-
-  useEffect(() => {
-    fetchListings();
-  }, [fetchListings]);
-
-  const handleSearch = useCallback(async (query: string) => {
-    if (!query.trim()) {
-      setFilteredListings(listings);
-      return;
-    }
-    try {
-      await searchListings(query);
-      setFilteredListings(listings);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to search listings';
-      toast.error(message);
-      setFilteredListings(listings);
-    }
-  }, [listings, searchListings]);
-
-  const handleRequestList = useCallback(async (listingId: string) => {
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      toast.success(`List ${listingId} requested successfully`);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to request list';
-      toast.error(message);
-    }
-  }, []);
+  const { error } = useListings();
 
   return (
     <div className="min-h-screen bg-background">
@@ -62,13 +22,7 @@ export default function Home() {
             </Alert>
           </div>
         )}
-        <SearchSection
-          filteredListings={filteredListings}
-          isLoading={isLoading}
-          isFiltering={isFiltering}
-          onSearch={handleSearch}
-          onRequestList={handleRequestList}
-        />
+        <SearchSection />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
-import { Listing } from '@/lib/types';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Listing } from "@/lib/types";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "../ui/badge";
 
 interface ListingCardProps {
   listing: Listing;
@@ -9,17 +9,21 @@ interface ListingCardProps {
   isLoading: boolean;
 }
 
-export function ListingCard({ listing, onRequestList, isLoading }: ListingCardProps) {
+export function ListingCard({
+  listing,
+  onRequestList,
+  isLoading,
+}: ListingCardProps) {
   return (
-    <Card>
-      <CardContent className="p-4">
+    <Card className="h-[400px] relative">
+      <CardContent className="p-4 h-full flex flex-col">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medium">{listing.title}</h3>
+          <h3 className="font-light">{listing.title}</h3>
           <Badge variant={listing.isVerified ? "default" : "secondary"}>
             {listing.isVerified ? "Verified" : "Unverified"}
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
           {listing.description}
         </p>
         <div className="flex flex-col space-y-2 mb-4">
@@ -40,24 +44,20 @@ export function ListingCard({ listing, onRequestList, isLoading }: ListingCardPr
             <span>{listing.type}</span>
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="text-yellow-400">★</span>
-            <span className="ml-1 text-sm">
-              {listing.seller.rating} ({listing.seller.name})
-            </span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-lg font-semibold">${listing.price}</span>
-            <Button
-              onClick={() => onRequestList(listing.id)}
-              disabled={isLoading}
-            >
-              Request List
-            </Button>
-          </div>
+        <div className="flex items-center mt-auto mb-12">
+          <span className="text-yellow-400">★</span>
+          <span className="ml-1 text-sm">
+            {listing.seller.rating} ({listing.seller.name})
+          </span>
         </div>
+        <Button 
+          className="absolute  bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-6rem)]" 
+          onClick={() => onRequestList(listing.id)} 
+          disabled={isLoading}
+        >
+          ${listing.price}
+        </Button>
       </CardContent>
     </Card>
   );
-} 
+}

@@ -24,7 +24,7 @@ export function useFilters() {
     setFilters(initialFilterState);
   }, []);
 
-  const applyFilters = useCallback(async (listings: any[]) => {
+  const applyFilters = useCallback(async (listings: Array<{ industry: string; jobTitle: string; volume: string; isVerified: boolean; type: string }>) => {
     setIsFiltering(true);
     try {
       // TODO: Replace with actual filtering logic

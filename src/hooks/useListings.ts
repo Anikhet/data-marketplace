@@ -14,7 +14,7 @@ export function useListings() {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       setListings(mockListings);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch listings');
     } finally {
       setIsLoading(false);
@@ -33,7 +33,7 @@ export function useListings() {
         listing.industry.toLowerCase().includes(query.toLowerCase())
       );
       setListings(filtered);
-    } catch (err) {
+    } catch {
       setError('Failed to search listings');
     } finally {
       setIsLoading(false);

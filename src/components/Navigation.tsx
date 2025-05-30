@@ -1,74 +1,55 @@
 'use client';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, ShoppingCart, Upload, User } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Navigation() {
-  const pathname = usePathname();
+  const activePath = usePathname();
 
-  const isActive = (path: string) => pathname === path;
+  const routes = [
+    { name: "Home", path: "/" },
+    { name: "Buyer Dashboard", path: "/dashboard/buyer" },
+    { name: "Seller Dashboard", path: "/dashboard/seller" },
+  ];
 
   return (
     <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-xl font-bold text-blue-600">
-                DataMarket
-              </Link>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                href="/"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                }`}
-              >
-                <Home className="h-5 w-5 mr-2" />
-                Home
-              </Link>
-              <Link
-                href="/dashboard/buyer"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/dashboard/buyer')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                }`}
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Buyer Dashboard
-              </Link>
-              <Link
-                href="/dashboard/seller"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/dashboard/seller')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                }`}
-              >
-                <Upload className="h-5 w-5 mr-2" />
-                Seller Dashboard
-              </Link>
-            </div>
-          </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <Link
-              href="/profile"
-              className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                isActive('/profile')
-                  ? 'border-blue-500 text-gray-900'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-              }`}
-            >
-              <User className="h-5 w-5 mr-2" />
-              Profile
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href="/" className="text-xl font-bold text-blue-600">
+              DataMarket
             </Link>
           </div>
+
+          {/* Nav Links */}
+          <ul className="hidden sm:flex sm:space-x-8 items-center">
+            {routes.map((route) => (
+              <li key={route.path} className="relative flex items-center">
+                <Link
+                  href={route.path}
+                  className={`text-sm font-medium transition ${
+                    activePath === route.path
+                      ? "text-black"
+                      : "text-gray-500 hover:text-black"
+                  }`}
+                >
+                  {route.name}
+                </Link>
+
+                {activePath === route.path && (
+                  <motion.div
+                    layoutId="Smooth-active"
+                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-black rounded-full"
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </nav>
   );
-} 
+}

@@ -10,13 +10,19 @@ interface SearchBarProps {
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [query, setQuery] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(query);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    onSearch(newQuery);
+  };
+
+  const handleClear = () => {
+    setQuery('');
+    onSearch('');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto">
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Search className="h-5 w-5 text-muted-foreground" />
@@ -24,22 +30,22 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         <Input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleChange}
           placeholder="Search for data lists (e.g., 'tech companies', 'healthcare professionals')"
-          className="pl-10 pr-10"
+          className="pl-10 pr-10 h-14"
         />
         {query && (
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            onClick={() => setQuery('')}
+            onClick={handleClear}
             className="absolute inset-y-0 right-0 pr-3"
           >
             <X className="h-5 w-5 text-muted-foreground" />
           </Button>
         )}
       </div>
-    </form>
+    </div>
   );
 } 

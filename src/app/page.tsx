@@ -1,12 +1,16 @@
+'use client';
 
+import { HeroSection } from '@/components/home/HeroSection';
+import SearchSection from '@/components/home/SearchSection';
+import { ListingsProvider } from '@/contexts/listings-context';
 
-import Home from "@/components/home";
-
-
-
-export default function Page() {
+export default function Home() {
   return (
-    <Home/>
-    
+    <ListingsProvider>
+      <main className="min-h-screen">
+        <HeroSection />
+        <SearchSection />
+      </main>
+    </ListingsProvider>
   );
 } 
