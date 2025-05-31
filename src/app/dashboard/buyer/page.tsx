@@ -1,4 +1,4 @@
-'use client';
+
 
 import BuyerDashboard from '@/components/BuyerDashboard';
 

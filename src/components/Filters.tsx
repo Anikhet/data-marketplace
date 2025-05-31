@@ -50,6 +50,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
 
   const handleFilterChange = (key: keyof FilterState, value: FilterState[keyof FilterState]) => {
     const newFilters = { ...filters, [key]: value };
+     console.log("New filters from UI:", newFilters); // ✅ add this
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
@@ -74,7 +75,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
                     ? filters.industry.filter((i) => i !== industry)
                     : [...filters.industry, industry];
                   handleFilterChange('industry', newIndustries);
-                }}
+                }}  
               >
                 {industry}
               </Button>

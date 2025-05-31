@@ -15,7 +15,7 @@ interface ListingsGridProps {
 export function ListingsGrid({
   listings,
   isLoading,
-  isFiltering,
+
   searchQuery,
   activeFilterCount,
   onRequestList,
@@ -35,7 +35,7 @@ export function ListingsGrid({
         </div>
       </CardHeader>
       <CardContent>
-        {isLoading || isFiltering ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
               <Card key={i}>

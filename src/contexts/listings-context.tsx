@@ -81,11 +81,10 @@ export function ListingsProvider({ children }: { children: ReactNode }) {
         listing.volume === activeFilters.volume;
       const matchesType = activeFilters.listType.length === 0 || 
         activeFilters.listType.includes(listing.type);
-      const matchesVerified = !activeFilters.verifiedSellers || 
-        listing.seller.isVerified;
+
 
       return matchesIndustry && matchesJobTitle && matchesVolume && 
-        matchesType && matchesVerified;
+        matchesType;
     });
 
     setFilteredListings(filtered);

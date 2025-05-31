@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 
-export default function ListingPreview({ listing }: ListingPreviewProps) {
+export function ListingPreview({ listing }: ListingPreviewProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,11 +13,17 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
     setIsLoading(true);
     setError(null);
     try {
-      // TODO: Replace with actual API call
       const response = await fetch(`/api/listings/${listing.id}/request`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      if (!response.ok) throw new Error('Failed to request list');
+      
+      if (!response.ok) {
+        throw new Error(`Failed to request list: ${response.statusText}`);
+      }
+      
       toast.success('List requested successfully');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to request list';
@@ -125,7 +131,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {listing.previewRecords.map((record, index) => (
-                <tr key={index}>
+                <tr key={`${record.email}-${index}`}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {record.name}
                   </td>

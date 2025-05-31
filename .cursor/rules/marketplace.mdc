@@ -1,0 +1,59 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Be specific: Instead of “fix this bug,” say “fix this TypeError in getServerSideProps due to undefined params.id.”
+
+Use filenames: Mention specific files or paths. e.g., pages/api/users.ts, components/Button.tsx.
+
+Explain context: Add inline comments or docstrings before invoking AI on unfamiliar code.
+
+Use AI iteratively: Ask the AI to refactor, then ask it to add types, then test cases—step-by-step
+
+
+Naming Conventions:
+
+Use kebab-case for directory names (e.g., components/auth-form).
+
+Use PascalCase for component files (e.g., AuthForm.tsx).
+
+Prefer named exports over default exports
+
+Consistent Utility Classes: Favor utility classes over custom CSS for styling.
+
+Responsive Design: Use Tailwind's responsive classes to ensure components adapt to different screen sizes.
+
+AI Assistance: Prompt AI with specific design requirements, e.g., "Generate Tailwind classes for a responsive card layout with image and text."
+
+Strict Typing: Always define types for API request/response objects.
+
+Schema Validation: Use libraries like zod or yup for schema validation, and integrate with forms using React Hook Form.
+
+Type Definitions: Create comprehensive type definitions for complex data structures to enhance code readability and maintainability
+
+Error Handling: Implement robust error handling using try/catch blocks and return appropriate status codes.
+
+Type Safety: Ensure all API routes have proper TypeScript typings for request and response objects.
+
+Testing & Debugging Guidelines
+Test-Driven Development: Write tests before implementing features to ensure code reliability.
+
+AI-Generated Tests: Utilize AI to generate test cases for functions and components.
+Bug Fixing: When encountering bugs, provide AI with the specific error message and relevant code snippet for targeted assistance.
+
+Tooling & Integration
+ESLint & Prettier: Set up ESLint and Prettier for consistent code formatting and linting.
+
+Environment Variables: Use .env files for environment variables and create a .env.example for reference.
+
+AI Validation: Ask AI to review your environment variable usage for potential security issues.
+
+
+Component Development Standards
+Modular Components: Break down UI elements into small, reusable components stored in the /components directory.
+
+Client Components: Only use 'use client' directive when necessary for interactivity, and wrap such components in Suspense with fallback UI. 
+
+
+Naming Conventions: Follow consistent naming conventions for components to enhance code clarity.

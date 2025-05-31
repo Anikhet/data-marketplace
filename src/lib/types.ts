@@ -18,6 +18,23 @@ export interface Listing {
     name: string;
     rating: number;
   };
+  metadata: {
+    niche: string;
+    source: string;
+    freshness: string;
+    exclusivityLevel: string;
+  };
+  stats: {
+    rating: number;
+    lastSoldCount: number;
+    qualityScore: number;
+  };
+  previewRecords: Array<{
+    name: string;
+    title: string;
+    company: string;
+    email: string;
+  }>;
 }
 
 export type PreviewRecord = {
