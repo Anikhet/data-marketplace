@@ -16,6 +16,25 @@ export const mockListings: Listing[] = [
       name: 'DataPro Solutions',
       rating: 4.8,
     },
+    metadata: {
+      niche: 'Technology',
+      source: 'Company Websites',
+      freshness: 'Updated Weekly',
+      exclusivityLevel: 'Premium'
+    },
+    stats: {
+      rating: 4.8,
+      lastSoldCount: 45,
+      qualityScore: 92
+    },
+    previewRecords: [
+      {
+        name: 'John Smith',
+        title: 'CEO',
+        company: 'TechStart Inc',
+        email: 'john@techstart.com'
+      }
+    ]
   },
   {
     id: '2',
@@ -32,6 +51,25 @@ export const mockListings: Listing[] = [
       name: 'MedData Inc',
       rating: 4.5,
     },
+    metadata: {
+      niche: 'Healthcare',
+      source: 'Medical Directories',
+      freshness: 'Updated Monthly',
+      exclusivityLevel: 'Standard'
+    },
+    stats: {
+      rating: 4.5,
+      lastSoldCount: 78,
+      qualityScore: 88
+    },
+    previewRecords: [
+      {
+        name: 'Sarah Johnson',
+        title: 'Nurse Practitioner',
+        company: 'City Hospital',
+        email: 'sarah@cityhospital.com'
+      }
+    ]
   },
   {
     id: '3',
@@ -48,6 +86,25 @@ export const mockListings: Listing[] = [
       name: 'FinanceLeads',
       rating: 4.9,
     },
+    metadata: {
+      niche: 'Finance',
+      source: 'LinkedIn Premium',
+      freshness: 'Updated Daily',
+      exclusivityLevel: 'Premium'
+    },
+    stats: {
+      rating: 4.9,
+      lastSoldCount: 120,
+      qualityScore: 95
+    },
+    previewRecords: [
+      {
+        name: 'Michael Chen',
+        title: 'Finance Director',
+        company: 'Fortune Corp',
+        email: 'mchen@fortunecorp.com'
+      }
+    ]
   },
   {
     id: '4',
@@ -64,6 +121,25 @@ export const mockListings: Listing[] = [
       name: 'RetailData Co',
       rating: 4.2,
     },
+    metadata: {
+      niche: 'Retail',
+      source: 'Store Directories',
+      freshness: 'Updated Quarterly',
+      exclusivityLevel: 'Basic'
+    },
+    stats: {
+      rating: 4.2,
+      lastSoldCount: 23,
+      qualityScore: 85
+    },
+    previewRecords: [
+      {
+        name: 'Lisa Brown',
+        title: 'Store Manager',
+        company: 'Retail Chain',
+        email: 'lisa@retailchain.com'
+      }
+    ]
   },
   {
     id: '5',
@@ -80,6 +156,25 @@ export const mockListings: Listing[] = [
       name: 'IndustryLeads',
       rating: 4.6,
     },
+    metadata: {
+      niche: 'Manufacturing',
+      source: 'Industry Directories',
+      freshness: 'Updated Monthly',
+      exclusivityLevel: 'Standard'
+    },
+    stats: {
+      rating: 4.6,
+      lastSoldCount: 56,
+      qualityScore: 90
+    },
+    previewRecords: [
+      {
+        name: 'David Wilson',
+        title: 'Senior Engineer',
+        company: 'AutoTech',
+        email: 'dwilson@autotech.com'
+      }
+    ]
   },
   {
     id: '6',
@@ -96,5 +191,24 @@ export const mockListings: Listing[] = [
       name: 'EduData Solutions',
       rating: 4.7,
     },
-  },
+    metadata: {
+      niche: 'Education',
+      source: 'School Directories',
+      freshness: 'Updated Monthly',
+      exclusivityLevel: 'Standard'
+    },
+    stats: {
+      rating: 4.7,
+      lastSoldCount: 34,
+      qualityScore: 89
+    },
+    previewRecords: [
+      {
+        name: 'Robert Taylor',
+        title: 'School Principal',
+        company: 'City High School',
+        email: 'rtaylor@cityhigh.edu'
+      }
+    ]
+  }
 ]; 

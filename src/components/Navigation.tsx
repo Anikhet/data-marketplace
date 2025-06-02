@@ -20,7 +20,7 @@ export default function Navigation() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-blue-600">
-              DataMarket
+              peeker.ai
             </Link>
           </div>
 

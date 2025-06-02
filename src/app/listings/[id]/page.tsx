@@ -5,16 +5,13 @@ import { ListingPreview } from '@/components/ListingPreview';
 import { useEffect, useState } from 'react';
 import { Listing } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useParams } from 'next/navigation';
 
 
-type ListingPageProps = {
-  params: {
-    id: string;
-  };
-};
 
-export default function ListingPage({params}: ListingPageProps) {
-  const listingId = params.id
+export default function ListingPage() {
+  const params = useParams();
+  const listingId = params.id as string;
   console.log("Listing ID: ", listingId);
   const [listing, setListing] = useState<Listing | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -2,6 +2,7 @@
 
 import Filters from "../filters";
 import SearchBar from "../SearchBar";
+import { HeroSection } from "./HeroSection";
 // import SearchBar from "@/components/search-bar";
 import { ListingsGrid } from "./ListingsGrid";
 import { useListingsContext } from "@/contexts/listings-context";
@@ -31,7 +32,9 @@ export default function SearchSection() {
   }, 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8  ">
+    <div>   
+      <HeroSection/>
+       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8  ">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters column */}
         <div className="lg:col-span-1">
@@ -52,5 +55,7 @@ export default function SearchSection() {
         </div>
       </div>
     </div>
+    </div>
+
   );
 }
