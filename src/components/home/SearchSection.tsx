@@ -1,5 +1,6 @@
-import Filters from "../filters";
 
+
+import Filters from "./filters";
 import { HeroSection } from "./HeroSection";
 
 
