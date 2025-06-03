@@ -4,7 +4,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 import { DashboardProvider } from "@/contexts/dashboard-context";
-import Navigation from "@/components/Navigation";
+
+import Navbar from "@/components/sections/navbar/default";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +21,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-gray-50`}>
+      <body className={`${inter.className} min-h-screen `}>
+        
    
           <DashboardProvider>
-            <Navigation />
+           
+           <Navbar/>
             <main className="flex min-h-screen flex-col">
+              
               {children}
             </main>
             <Toaster />
