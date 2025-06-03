@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Search, X } from 'lucide-react';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import LaunchUI from './logos/launch-ui';
+import { X } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -22,31 +24,42 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-muted-foreground" />
-        </div>
-  <Input
+<div className="relative w-full max-w-4xl mx-auto">
+  {/* Input with fat border and gradient edge */}
+  <div className="relative p-[3px] rounded-2xl bg-gradient-to-r from-orange-500 via-orange-600 to-yellow-400 shadow-md">
+    <div className="relative">
+      {/* LaunchUI on the left inside input */}
+      <div className="absolute inset-y-0 left-0 flex items-center pl-4 z-10">
+        <LaunchUI />
+      </div>
+
+      {/* Input field with padding to avoid overlap */}
+<Input
   type="text"
   value={query}
   onChange={handleChange}
   placeholder="Search for data lists (e.g., 'tech companies', 'healthcare professionals')"
-  className="pl-10 pr-10 h-14 rounded-lg border-2 border-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-base shadow-sm transition-all"
+  className="pl-16 pr-14 h-16 text-base rounded-xl bg-white/90 backdrop-blur-lg  border-orange-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-500 focus-visible:border-orange-500 w-full placeholder:text-muted-foreground"
 />
 
-        {query && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3"
-          >
-            <X className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        )}
-      </div>
+      {/* Clear Button on the right */}
+      {query && (
+ <Button
+  type="button"
+  variant="ghost"
+  size="icon"
+  onClick={handleClear}
+  className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center justify-center p-0 h-6 w-6 z-10"
+>
+  <X className="h-5 w-5 text-muted-foreground" />
+</Button>
+
+      )}
     </div>
+  </div>
+</div>
+
+
+
   );
-} 
+}
