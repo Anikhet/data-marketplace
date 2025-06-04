@@ -1,13 +1,70 @@
-import { useState } from 'react';
+'use client';
+
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
 import { Star, Shield, Clock, TrendingUp, AlertCircle } from 'lucide-react';
 import { ListingPreviewProps } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { useListingStore } from '@/lib/store/listing-store';
+
+interface PreviewRecord {
+  name: string;
+  title: string;
+  company: string;
+  email: string;
+  phone?: string;
+}
 
 export function ListingPreview({ listing }: ListingPreviewProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { 
+    selectedColumns, 
+    addColumn, 
+    isLoading, 
+    setIsLoading, 
+    error, 
+    setError 
+  } = useListingStore();
+
+  const baseColumns: ColumnDef<PreviewRecord>[] = [
+    {
+      header: 'Name',
+      accessorKey: 'name',
+    },
+    {
+      header: 'Title',
+      accessorKey: 'title',
+    },
+    {
+      header: 'Company',
+      accessorKey: 'company',
+    },
+    {
+      header: 'Email',
+      accessorKey: 'email',
+      cell: (info) => info.getValue<string>().replace(/(?<=.{3}).(?=.*@)/g, '*'),
+    },
+  ];
+
+  const columns = selectedColumns.includes('phone') 
+    ? [...baseColumns, {
+        header: 'Phone',
+        accessorKey: 'phone',
+        cell: (info) => info.getValue<string>() ?? 'N/A',
+      }]
+    : baseColumns;
+
+  const table = useReactTable({
+    data: listing.previewRecords,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   const handleRequestList = async () => {
     setIsLoading(true);
@@ -110,40 +167,44 @@ export function ListingPreview({ listing }: ListingPreviewProps) {
 
       {/* Preview Records */}
       <div className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Preview Records</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold">Preview Records</h2>
+          <button
+            onClick={() => addColumn('phone')}
+            className="flex items-center text-sm text-blue-600 hover:text-blue-800"
+          >
+            <Plus className="w-4 h-4 mr-1" />
+            Add Column
+          </button>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
             <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Title
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Company
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-              </tr>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {listing.previewRecords.map((record, index) => (
-                <tr key={`${record.email}-${index}`}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {record.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.title}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.company}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.email.replace(/(?<=.{3}).(?=.*@)/g, '*')}
-                  </td>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-700"
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>

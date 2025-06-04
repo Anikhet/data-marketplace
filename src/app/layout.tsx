@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 import { DashboardProvider } from "@/contexts/dashboard-context";
+import { AuthProvider } from "@/contexts/auth-context";
 
 import Navbar from "@/components/sections/navbar/default";
 
@@ -24,15 +25,17 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen `}>
         
    
-          <DashboardProvider>
-           
-           <Navbar/>
-            <main className="flex min-h-screen flex-col">
-              
-              {children}
-            </main>
-            <Toaster />
-          </DashboardProvider>
+          <AuthProvider>
+            <DashboardProvider>
+             
+             <Navbar/>
+              <main className="flex min-h-screen flex-col">
+                
+                {children}
+              </main>
+              <Toaster />
+            </DashboardProvider>
+          </AuthProvider>
      
       </body>
     </html>

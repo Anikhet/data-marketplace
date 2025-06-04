@@ -55,7 +55,7 @@ export default function BuyerDashboard() {
             <div className="text-2xl font-bold">{buyerStats.completedRequests}</div>
           </CardContent>
         </Card>
-        
+{/*         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
@@ -63,7 +63,7 @@ export default function BuyerDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(buyerStats.revenue)}</div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       {/* Recent Requests */}
