@@ -1,4 +1,4 @@
-'use client';
+
 
 import {
   ColumnDef,
@@ -102,7 +102,7 @@ const badgeVariants = {
   }
 };
 
-export function ListingPreview({ listing }: ListingPreviewProps) {
+export default function ListingPreview({ listing }: ListingPreviewProps) {
   const [selectedColumns, setSelectedColumns] = useState<string[]>(['name', 'title', 'company', 'email']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

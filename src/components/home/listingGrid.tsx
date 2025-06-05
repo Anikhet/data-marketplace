@@ -1,7 +1,9 @@
 import { Listing } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ListingCard } from './ListingCard';
+import { ListingCard } from './listingCard';
+
+
 
 interface ListingsGridProps {
   listings: Listing[];

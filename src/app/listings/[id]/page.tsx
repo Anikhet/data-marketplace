@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react';
 import { Listing } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
-import { ListingPreview } from '@/components/listingPreview';
+import ListingPreview from '../../../components/listingPreview';
+
+
 
 
 
