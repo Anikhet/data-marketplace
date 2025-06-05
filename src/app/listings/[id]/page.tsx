@@ -10,6 +10,7 @@ import { ListingPreview } from '@/components/listingPreview';
 
 
 
+
 export default function ListingPage() {
   const params = useParams();
   const listingId = params.id as string;
