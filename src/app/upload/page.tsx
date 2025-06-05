@@ -1,8 +1,9 @@
- import React from 'react'
+ import UploadPage from '@/components/upload/upload'
+import React from 'react'
  
  const page = () => {
    return (
-     <div>page</div>
+    <UploadPage/>
    )
  }
  

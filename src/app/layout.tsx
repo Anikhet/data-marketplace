@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import { DashboardProvider } from "@/contexts/dashboard-context";
 import { AuthProvider } from "@/contexts/auth-context";
 
-import Navbar from "@/components/sections/navbar/default";
+import Navbar from "@/components/home/sections/navbar/default";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +29,7 @@ export default function RootLayout({
             <DashboardProvider>
              
              <Navbar/>
-              <main className="flex min-h-screen flex-col">
+              <main className="flex min-h-screen flex-col w-screen overflow-hidden">
                 
                 {children}
               </main>

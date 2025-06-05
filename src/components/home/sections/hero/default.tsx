@@ -3,13 +3,13 @@ import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import Github from "../../logos/github";
-import { Badge } from "../../ui/badge";
-import { Button, type ButtonProps } from "../../ui/button";
-import Glow from "../../ui/glow";
-import { Mockup, MockupFrame } from "../../ui/mockup";
-import Screenshot from "../../ui/screenshot";
-import { Section } from "../../ui/section";
+import Github from "../../../ui/logos/github";
+import { Badge } from "../../../ui/badge";
+import { Button, type ButtonProps } from "../../../ui/button";
+import Glow from "../../../ui/glow";
+import { Mockup, MockupFrame } from "../../../ui/mockup";
+import Screenshot from "../../../ui/screenshot";
+import { Section } from "../../../ui/section";
 
 interface HeroButtonProps {
   href: string;

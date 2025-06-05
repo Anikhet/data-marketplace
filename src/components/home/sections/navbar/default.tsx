@@ -4,21 +4,21 @@ import { Menu } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { cn } from "@/lib/utils";
-import LaunchUI from "../../logos/launch-ui";
-import { Button, type ButtonProps } from "../../ui/button";
+import LaunchUI from "../../../ui/logos/launch-ui";
+import { Button, type ButtonProps } from "../../../ui/button";
 import {
   Navbar as NavbarComponent,
   NavbarLeft,
   NavbarRight,
-} from "../../ui/navbar";
-import Navigation from "../../ui/navigation";
-import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
+} from "../../../ui/navbar";
+import Navigation from "../../../ui/navigation";
+import { Sheet, SheetContent, SheetTrigger } from "../../../ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
+} from "../../../ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
 import { Session } from "@supabase/supabase-js";
 import Link from "next/link";

@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import LaunchUI from './logos/launch-ui';
+
 import { X } from 'lucide-react';
+import LaunchUI from '../ui/logos/launch-ui';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;

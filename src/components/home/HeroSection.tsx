@@ -6,9 +6,10 @@ import { ArrowRightIcon } from "lucide-react";
 
 import Glow from "@/components/ui/glow";
 import { cn } from "@/lib/utils";
-import SearchBar from "../SearchBar";
+
 
 import { useListingsContext } from "@/contexts/listings-context";
+import SearchBar from "./SearchBar";
 
 
 // interface HeroAction {

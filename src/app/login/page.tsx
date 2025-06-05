@@ -1,83 +1,155 @@
 'use client'
 
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { createClient } from '@/utils/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { login } from './actions'
-import { useActionState } from 'react'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
 
-interface FormState {
-  success: boolean
-  error?: string
+interface FormData {
+  email: string
+  otp: string
 }
 
-interface PageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
-
-export default function LoginPage({ searchParams }: PageProps) {
-  const [params, setParams] = useState<{ [key: string]: string | string[] | undefined }>({})
-  
-  useEffect(() => {
-    searchParams.then(setParams)
-  }, [searchParams])
-
-  const redirectTo = typeof params.redirectedFrom === 'string' 
-    ? params.redirectedFrom 
-    : '/dashboard'
+export default function LoginPage() {
+  const [otpSent, setOtpSent] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const supabase = createClient()
 
-  const [state, formAction] = useActionState<FormState, FormData>(async (prevState: FormState, formData: FormData) => {
+  const {
+    register,
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm<FormData>()
+
+
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true)
+
     try {
-      formData.append('redirectTo', redirectTo)
-      await login(formData)
-      return { success: true }
-    } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : 'An error occurred' }
-    }
-  }, { success: false })
+      if (!otpSent) {
+        const { error } = await supabase.auth.signInWithOtp({
+          email: data.email,
+          options: {
+            shouldCreateUser: true,
+            data: { type: 'email' },
+          },
+        })
 
-  useEffect(() => {
-    if (state.success) {
-      router.push(redirectTo)
+        if (error) throw error
+
+        setOtpSent(true)
+        toast.success('✅ OTP has been sent to your email')
+      } else {
+        const { error, data: result } = await supabase.auth.verifyOtp({
+          email: data.email,
+          token: data.otp,
+          type: 'email',
+        })
+
+        if (error) throw error
+
+        if (result.session) {
+          toast.success('✅ Logged in successfully!')
+          router.push('/')
+        }
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Something went wrong')
+    } finally {
+      setIsLoading(false)
     }
-  }, [state.success, router, redirectTo])
+  }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="mx-auto w-full max-w-md space-y-6 p-6">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Login</h1>
-          <p className="text-gray-500">Enter your email to login to your account</p>
-        </div>
-        <form action={formAction} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" placeholder="m@example.com" required type="email" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" required type="password" />
-          </div>
-          {state.error && (
-            <div className="text-sm text-red-500">
-              {state.error}
-            </div>
-          )}
-          <Button className="w-full" type="submit">
-            Login
-          </Button>
-        </form>
-        <div className="text-center text-sm">
-          Don&apos;t have an account?{' '}
-          <Link className="underline" href="/signup">
-            Sign up
-          </Link>
-        </div>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
+        <Card className="w-[350px] shadow-xl">
+          <CardHeader>
+            <CardTitle>Welcome</CardTitle>
+            <CardDescription>
+              {otpSent
+                ? 'Enter the OTP sent to your email'
+                : 'Enter your email to sign in'}
+            </CardDescription>
+          </CardHeader>
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent>
+              <div className="grid w-full items-center gap-4">
+                {/* Email Field */}
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    disabled={otpSent}
+                    {...register('email', { required: true })}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">Email is required</p>
+                  )}
+                </div>
+
+                {/* OTP Field */}
+                {otpSent && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col space-y-1.5"
+                  >
+                    <Label htmlFor="otp">OTP</Label>
+                    <Input
+                      id="otp"
+                      type="text"
+                      placeholder="123456"
+                      {...register('otp', { required: true })}
+                    />
+                    {errors.otp && (
+                      <p className="text-sm text-red-500">OTP is required</p>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+            </CardContent>
+
+            <CardFooter>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    {otpSent ? 'Verifying...' : 'Sending OTP...'}
+                  </div>
+                ) : otpSent ? (
+                  'Verify OTP'
+                ) : (
+                  'Send OTP'
+                )}
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </motion.div>
     </div>
   )
 }
