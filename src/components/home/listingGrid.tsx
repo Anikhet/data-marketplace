@@ -1,7 +1,7 @@
 import { Listing } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ListingCard } from './listingCard';
+import { ListingCard } from './ListingCard';
 
 
 

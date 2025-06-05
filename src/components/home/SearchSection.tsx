@@ -6,7 +6,7 @@ import { HeroSection } from "./HeroSection";
 
 
 import { useListingsContext } from "@/contexts/listings-context";
-import { ListingsGrid } from "./listingGrid";
+import { ListingsGrid } from "./ListingGrid";
 
 export default function SearchSection() {
   const {
