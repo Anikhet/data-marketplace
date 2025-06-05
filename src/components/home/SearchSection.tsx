@@ -4,8 +4,9 @@ import Filters from "./filters";
 import { HeroSection } from "./HeroSection";
 
 
-import { ListingsGrid } from "./listingGrid";
+
 import { useListingsContext } from "@/contexts/listings-context";
+import { ListingsGrid } from "./listingGrid";
 
 export default function SearchSection() {
   const {
