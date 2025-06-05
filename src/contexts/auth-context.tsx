@@ -9,12 +9,16 @@ interface AuthContextType {
   user: User | null
   isLoading: boolean
   signOut: () => Promise<void>
+  isAuthenticated: boolean
+  showAuthModal: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   signOut: async () => {},
+  isAuthenticated: false,
+  showAuthModal: () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -45,8 +49,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const showAuthModal = () => {
+    // TODO: Implement auth modal logic
+    console.log('Show auth modal')
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, signOut }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isLoading, 
+      signOut,
+      isAuthenticated: !!user,
+      showAuthModal 
+    }}>
       {children}
     </AuthContext.Provider>
   )

@@ -3,24 +3,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDashboard } from '@/contexts/dashboard-context';
 import { Badge } from '@/components/ui/badge';
-
 import { Button } from '@/components/ui/button';
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import Glow from '@/components/ui/glow';
 import { 
-
   Building2, 
   TrendingUp, 
   Clock, 
-
   AlertCircle,
   CheckCircle2,
- 
-  Star
+  Star,
+  RefreshCw,
+
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 import { useState } from 'react';
+import { Progress } from "@/components/ui/progress";
 
 interface ListSuggestion {
   id: string;
@@ -30,12 +30,25 @@ interface ListSuggestion {
   potentialImpact: string;
 }
 
-interface Purchase {
+
+
+interface PurchaseHistory {
   id: string;
-  date: string;
-  listName: string;
-  amount: number;
-  status: 'completed' | 'pending' | 'failed';
+  title: string;
+  purchaseDate: string;
+  price: number;
+  lastVerified: string;
+  verificationScore: number;
+  cardLast4: string;
+  status: 'active' | 'expired' | 'pending';
+}
+
+interface ActiveRequest {
+  id: string;
+  title: string;
+  requestDate: string;
+  status: 'processing' | 'completed' | 'failed';
+  progress: number;
 }
 
 const containerVariants = {
@@ -88,9 +101,77 @@ const badgeVariants = {
   }
 };
 
+const purchaseCardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  },
+  hover: {
+    scale: 1.02,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 10
+    }
+  }
+};
+
+const statusBadgeVariants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 20
+    }
+  }
+};
+
+const mockPurchaseHistory: PurchaseHistory[] = [
+  {
+    id: "1",
+    title: "Tech Industry C-Level Executives 2024",
+    purchaseDate: "2024-03-15",
+    price: 999,
+    lastVerified: "2024-03-15",
+    verificationScore: 95,
+    cardLast4: "4242",
+    status: 'active'
+  },
+  {
+    id: "2",
+    title: "Healthcare Decision Makers",
+    purchaseDate: "2024-02-01",
+    price: 799,
+    lastVerified: "2024-02-01",
+    verificationScore: 85,
+    cardLast4: "4242",
+    status: 'expired'
+  }
+];
+
+const mockActiveRequests: ActiveRequest[] = [
+  {
+    id: "1",
+    title: "Custom List: FinTech Startups",
+    requestDate: "2024-03-20",
+    status: 'processing',
+    progress: 65
+  }
+];
+
 export default function BuyerDashboard() {
   const { buyerStats } = useDashboard();
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedTab, setSelectedTab] = useState<'purchases' | 'requests'>('purchases');
 
   const listSuggestions: ListSuggestion[] = [
     {
@@ -109,24 +190,31 @@ export default function BuyerDashboard() {
     }
   ];
 
-  const recentPurchases: Purchase[] = [
-    {
-      id: '1',
-      date: '2024-03-15',
-      listName: 'Tech CEOs 2024',
-      amount: 299.99,
-      status: 'completed'
-    },
-    {
-      id: '2',
-      date: '2024-03-10',
-      listName: 'Startup Founders Q1',
-      amount: 199.99,
-      status: 'completed'
+  // const recentPurchases: Purchase[] = [
+  //   {
+  //     id: '1',
+  //     date: '2024-03-15',
+  //     listName: 'Tech CEOs 2024',
+  //     amount: 299.99,
+  //     status: 'completed'
+  //   },
+  //   {
+  //     id: '2',
+  //     date: '2024-03-10',
+  //     listName: 'Startup Founders Q1',
+  //     amount: 199.99,
+  //     status: 'completed'
+  //   }
+  // ];
+
+  const needsVerification = mockPurchaseHistory.filter(
+    purchase => {
+      const daysSinceVerification = Math.floor(
+        (new Date().getTime() - new Date(purchase.lastVerified).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return daysSinceVerification > 30;
     }
-  ];
-
-
+  );
 
   return (
     <motion.div 
@@ -200,6 +288,250 @@ export default function BuyerDashboard() {
       </motion.div>
 
       {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Purchases/Requests */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Tabs */}
+          <div className="flex space-x-4 border-b border-gray-200">
+            <button
+              className={`pb-4 px-1 ${
+                selectedTab === 'purchases'
+                  ? 'border-b-2 border-orange-500 text-orange-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+              onClick={() => setSelectedTab('purchases')}
+            >
+              Purchased Lists
+            </button>
+            <button
+              className={`pb-4 px-1 ${
+                selectedTab === 'requests'
+                  ? 'border-b-2 border-orange-500 text-orange-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+              onClick={() => setSelectedTab('requests')}
+            >
+              Active Requests
+            </button>
+          </div>
+
+          {/* Content */}
+          {selectedTab === 'purchases' ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-4"
+            >
+              {mockPurchaseHistory.map((purchase, index) => (
+                <motion.div
+                  key={purchase.id}
+                  variants={purchaseCardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover="hover"
+                  custom={index}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="overflow-hidden bg-white/50 backdrop-blur-sm border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <motion.h3 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="font-semibold text-gray-900 text-lg"
+                          >
+                            {purchase.title}
+                          </motion.h3>
+                          <motion.p 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                            className="text-sm text-gray-500"
+                          >
+                            Purchased on {new Date(purchase.purchaseDate).toLocaleDateString()}
+                          </motion.p>
+                        </div>
+                        <motion.div
+                          variants={statusBadgeVariants}
+                          initial="hidden"
+                          animate="visible"
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Badge
+                            variant={purchase.status === 'active' ? 'default' : 'secondary'}
+                            className={`${
+                              purchase.status === 'active' 
+                                ? 'bg-orange-100 text-orange-700 hover:bg-orange-200' 
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            } transition-colors duration-200`}
+                          >
+                            {purchase.status === 'active' ? 'Active' : 'Expired'}
+                          </Badge>
+                        </motion.div>
+                      </div>
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="grid grid-cols-2 gap-4 mb-4"
+                      >
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-sm text-gray-500">Price Paid</p>
+                          <p className="font-medium text-gray-900">${purchase.price}</p>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-sm text-gray-500">Card Used</p>
+                          <p className="font-medium text-gray-900">•••• {purchase.cardLast4}</p>
+                        </div>
+                      </motion.div>
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm text-gray-500">
+                            Last verified: {new Date(purchase.lastVerified).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-orange-600 border-orange-200 hover:bg-orange-50 transition-colors duration-200"
+                          >
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            Re-verify
+                          </Button>
+                        </motion.div>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="space-y-4">
+              {mockActiveRequests.map((request) => (
+                <Card key={request.id}>
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{request.title}</h3>
+                        <p className="text-sm text-gray-500">
+                          Requested on {new Date(request.requestDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="default"
+                        className="bg-orange-100 text-orange-700"
+                      >
+                        Processing
+                      </Badge>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Progress</span>
+                        <span>{request.progress}%</span>
+                      </div>
+                      <Progress value={request.progress} className="h-2" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Upsells and Suggestions */}
+        <div className="space-y-6">
+          {/* Verification Reminder */}
+          {needsVerification.length > 0 && (
+            <Card className="bg-orange-50 border-orange-100">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="h-5 w-5 text-orange-500 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Data Verification Needed
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {needsVerification.length} of your lists haven&apos;t been verified in over 30 days.
+                      Keep your data fresh and accurate.
+                    </p>
+                    <Button
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                      onClick={() => {/* TODO: Implement bulk verification */}}
+                    >
+                      Verify All Lists
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Agency Partnership */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-3">
+                <Building2 className="h-5 w-5 text-orange-500 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Partner with Top Agencies
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Connect with our network of expert agencies to maximize the value of your data.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
+                    onClick={() => {/* TODO: Implement agency connection */}}
+                  >
+                    Find an Agency
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Premium Features */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-3">
+                <Sparkles className="h-5 w-5 text-orange-500 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Upgrade to Premium
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Get access to advanced features, priority support, and exclusive data sets.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
+                    onClick={() => {/* TODO: Implement upgrade flow */}}
+                  >
+                    View Premium Features
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -375,25 +707,52 @@ export default function BuyerDashboard() {
                       animate="visible"
                       className="space-y-4"
                     >
-                      {recentPurchases.map((purchase) => (
-                        <motion.div
-                          key={purchase.id}
-                          variants={itemVariants}
-                          className="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-gray-100 hover:shadow-md transition-all duration-200"
-                        >
-                          <div>
-                            <h4 className="font-medium text-gray-900">{purchase.listName}</h4>
-                            <p className="text-sm text-gray-500">{purchase.date}</p>
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            <span className="font-semibold text-gray-900">${purchase.amount}</span>
-                            <Badge variant={purchase.status === 'completed' ? 'secondary' : 'outline'} 
-                              className={purchase.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : ''}>
-                              {purchase.status}
-                            </Badge>
-                          </div>
-                        </motion.div>
-                      ))}
+                      {mockPurchaseHistory.map((purchase) => (
+                <Card key={purchase.id}>
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{purchase.title}</h3>
+                        <p className="text-sm text-gray-500">
+                          Purchased on {new Date(purchase.purchaseDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <Badge
+                        variant={purchase.status === 'active' ? 'default' : 'secondary'}
+                        className={purchase.status === 'active' ? 'bg-orange-100 text-orange-700' : ''}
+                      >
+                        {purchase.status === 'active' ? 'Active' : 'Expired'}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <p className="text-sm text-gray-500">Price Paid</p>
+                        <p className="font-medium">${purchase.price}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Card Used</p>
+                        <p className="font-medium">•••• {purchase.cardLast4}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">
+                          Last verified: {new Date(purchase.lastVerified).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Re-verify
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
                     </motion.div>
                   </CardContent>
                 </Card>
@@ -443,10 +802,15 @@ export default function BuyerDashboard() {
                   </CardContent>
                 </Card>
               )}
+             
+  
             </motion.div>
           </TabsContent>
         </AnimatePresence>
       </Tabs>
+
+   
+   
     </motion.div>
   );
 } 

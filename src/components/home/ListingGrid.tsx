@@ -2,8 +2,7 @@ import { Listing } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ListingCard } from './ListingCard';
-
-
+import NoResultsFound from './NoResultsFound';
 
 interface ListingsGridProps {
   listings: Listing[];
@@ -17,7 +16,6 @@ interface ListingsGridProps {
 export function ListingsGrid({
   listings,
   isLoading,
-
   searchQuery,
   activeFilterCount,
   onRequestList,
@@ -64,13 +62,7 @@ export function ListingsGrid({
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground">
-              {searchQuery
-                ? 'No listings found matching your search criteria'
-                : 'No listings available at the moment'}
-            </p>
-          </div>
+          <NoResultsFound />
         )}
       </CardContent>
     </Card>

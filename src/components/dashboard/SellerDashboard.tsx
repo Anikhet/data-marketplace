@@ -5,12 +5,12 @@ import { useDashboard } from '@/contexts/dashboard-context';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import Glow from '@/components/ui/glow';
 import { 
-  Download, 
+
   Star, 
   TrendingUp, 
   Users,
@@ -20,115 +20,105 @@ import {
   BarChart3,
   DollarSign,
 
+  Upload,
+  Sparkles,
+
 } from 'lucide-react';
 import { useState } from 'react';
 
-interface CommissionTier {
-  level: number;
-  name: string;
-  percentage: number;
-  requirements: {
-    lists: number;
-    sales: number;
-  };
-  nextTier?: {
-    lists: number;
-    sales: number;
-  };
-}
-
-interface PeekerDataset {
+interface Sale {
   id: string;
   title: string;
-  description: string;
-  size: number;
-  quality: number;
-  price: number;
-  category: string;
-  tags: string[];
+  date: string;
+  amount: number;
+  commission: number;
+  status: 'completed' | 'pending' | 'failed';
 }
 
-const commissionTiers: CommissionTier[] = [
+interface Listing {
+  id: string;
+  title: string;
+  price: number;
+  leads: number;
+  status: 'active' | 'draft' | 'pending';
+  lastUpdated: string;
+}
+
+interface CommissionTier {
+  tier: number;
+  salesRequired: number;
+  commission: number;
+  description: string;
+}
+
+const mockSales: Sale[] = [
   {
-    level: 1,
-    name: 'Bronze',
-    percentage: 70,
-    requirements: {
-      lists: 0,
-      sales: 0
-    },
-    nextTier: {
-      lists: 5,
-      sales: 3
-    }
+    id: "1",
+    title: "Tech Industry C-Level Executives 2024",
+    date: "2024-03-15",
+    amount: 999,
+    commission: 99.90,
+    status: 'completed'
   },
   {
-    level: 2,
-    name: 'Silver',
-    percentage: 75,
-    requirements: {
-      lists: 5,
-      sales: 3
-    },
-    nextTier: {
-      lists: 15,
-      sales: 10
-    }
-  },
-  {
-    level: 3,
-    name: 'Gold',
-    percentage: 80,
-    requirements: {
-      lists: 15,
-      sales: 10
-    },
-    nextTier: {
-      lists: 30,
-      sales: 25
-    }
-  },
-  {
-    level: 4,
-    name: 'Platinum',
-    percentage: 85,
-    requirements: {
-      lists: 30,
-      sales: 25
-    }
+    id: "2",
+    title: "Healthcare Decision Makers",
+    date: "2024-03-10",
+    amount: 799,
+    commission: 79.90,
+    status: 'completed'
   }
 ];
 
-const mockPeekerDatasets: PeekerDataset[] = [
+const mockListings: Listing[] = [
   {
-    id: '1',
-    title: 'Tech Startup Founders 2024',
-    description: 'Comprehensive list of tech startup founders and CEOs from emerging companies',
-    size: 2500,
-    quality: 92,
-    price: 499,
-    category: 'Technology',
-    tags: ['Founders', 'Startups', 'Tech']
+    id: "1",
+    title: "Tech Industry C-Level Executives 2024",
+    price: 999,
+    leads: 5000,
+    status: 'active',
+    lastUpdated: "2024-03-15"
   },
   {
-    id: '2',
-    title: 'Healthcare Professionals Database',
-    description: 'Verified healthcare professionals including doctors, specialists, and administrators',
-    size: 5000,
-    quality: 95,
+    id: "2",
+    title: "Healthcare Decision Makers",
     price: 799,
-    category: 'Healthcare',
-    tags: ['Medical', 'Doctors', 'Healthcare']
+    leads: 3000,
+    status: 'active',
+    lastUpdated: "2024-03-10"
+  }
+];
+
+const commissionTiers: CommissionTier[] = [
+  {
+    tier: 1,
+    salesRequired: 0,
+    commission: 10,
+    description: "Starting tier"
   },
   {
-    id: '3',
-    title: 'Finance Industry Decision Makers',
-    description: 'C-level executives and decision makers from top financial institutions',
-    size: 3000,
-    quality: 94,
-    price: 699,
-    category: 'Finance',
-    tags: ['Finance', 'Executives', 'Banking']
+    tier: 2,
+    salesRequired: 10,
+    commission: 12,
+    description: "10+ sales"
+  },
+  {
+    tier: 3,
+    salesRequired: 20,
+    commission: 15,
+    description: "20+ sales"
+  },
+  {
+    tier: 4,
+    salesRequired: 50,
+    commission: 18,
+    description: "50+ sales"
+  },
+  {
+    tier: 5,
+    salesRequired: 100,
+    commission: 20,
+    description: "100+ sales"
   }
 ];
 
@@ -159,6 +149,17 @@ export default function SellerDashboard() {
   const { sellerStats, recentListings } = useDashboard();
   const [activeTab, setActiveTab] = useState('overview');
   const currentTier = commissionTiers[1]; // Example: Silver tier
+
+
+
+  const completedSales = mockSales.filter(sale => sale.status === 'completed').length;
+
+
+  // Calculate progress to next tier
+  const nextTier = commissionTiers.find(tier => tier.tier === currentTier.tier + 1);
+  const progressToNextTier = nextTier 
+    ? (completedSales - currentTier.salesRequired) / (nextTier.salesRequired - currentTier.salesRequired) * 100
+    : 100;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -196,7 +197,7 @@ export default function SellerDashboard() {
       >
         {[
           { title: 'Total Revenue', value: formatCurrency(sellerStats.revenue), icon: DollarSign, color: 'text-emerald-500' },
-          { title: 'Commission Tier', value: currentTier.name, icon: Trophy, color: 'text-amber-500', badge: `${currentTier.percentage}%` },
+          { title: 'Commission Tier', value: currentTier.description, icon: Trophy, color: 'text-amber-500', badge: `${currentTier.commission}%` },
           { title: 'Total Listings', value: sellerStats.totalListings, icon: FileUp, color: 'text-blue-500' },
           { title: 'Completed Sales', value: sellerStats.completedRequests, icon: BarChart3, color: 'text-purple-500' }
         ].map((stat) => (
@@ -281,69 +282,94 @@ export default function SellerDashboard() {
                     <CardTitle className="text-xl font-semibold text-gray-900">Commission Tiers</CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <motion.div 
-                      variants={containerVariants}
-                      initial="hidden"
-                      animate="visible"
-                      className="space-y-4"
-                    >
+                    <div className="flex items-start space-x-3 mb-6">
+                      <Trophy className="h-5 w-5 text-orange-500 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">
+                          Commission Tier
+                        </h3>
+                        <p className="text-2xl font-bold text-orange-600">
+                          {currentTier.commission}%
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {currentTier.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {nextTier && (
+                      <div className="space-y-3 mb-6">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium text-gray-700">Progress to {nextTier.commission}%</span>
+                          <span className="text-sm font-semibold text-orange-600">{Math.round(progressToNextTier)}%</span>
+                        </div>
+                        <div className="relative h-3 bg-gray-100 rounded-full overflow-hidden">
+                          <div 
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full transition-all duration-500 ease-out"
+                            style={{ width: `${progressToNextTier}%` }}
+                          />
+                          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-500">
+                          <span>{currentTier.salesRequired} sales</span>
+                          <span>{nextTier.salesRequired} sales</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2">
+                          {nextTier.salesRequired - completedSales} more sales needed for next tier
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
                       {commissionTiers.map((tier) => (
-                        <motion.div
-                          key={tier.level}
-                          variants={itemVariants}
-                          className={`p-4 rounded-lg ${
-                            tier.level === currentTier.level 
-                              ? 'bg-blue-50 border border-blue-200' 
-                              : 'bg-white/50 backdrop-blur-sm border border-gray-100'
+                        <div
+                          key={tier.tier}
+                          className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                            tier.tier === currentTier.tier
+                              ? 'bg-orange-50 border border-orange-100 shadow-sm'
+                              : 'hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center space-x-2">
-                              <Trophy className={`w-5 h-5 ${
-                                tier.level === currentTier.level 
-                                  ? 'text-blue-500' 
-                                  : 'text-gray-400'
-                              }`} />
-                              <h4 className="font-medium text-gray-900">{tier.name}</h4>
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                              tier.tier === currentTier.tier
+                                ? 'bg-orange-100 text-orange-600'
+                                : 'bg-gray-100 text-gray-400'
+                            }`}>
+                              <Target className="h-4 w-4" />
                             </div>
-                            <Badge variant={tier.level === currentTier.level ? 'default' : 'secondary'}
-                              className={tier.level === currentTier.level ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}>
-                              {tier.percentage}%
-                            </Badge>
-                          </div>
-                          <div className="space-y-2">
-                            <div className="flex items-center space-x-2">
-                              <Target className="w-4 h-4 text-gray-500" />
-                              <span className="text-sm text-gray-600">
-                                {tier.requirements.lists} Lists
-                              </span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <TrendingUp className="w-4 h-4 text-gray-500" />
-                              <span className="text-sm text-gray-600">
-                                {tier.requirements.sales} Sales
-                              </span>
+                            <div>
+                              <span className="text-sm font-medium text-gray-900">{tier.description}</span>
+                              <p className="text-xs text-gray-500">{tier.salesRequired} sales required</p>
                             </div>
                           </div>
-                          {tier.nextTier && (
-                            <div className="mt-4">
-                              <div className="flex justify-between text-sm mb-1">
-                                <span className="text-gray-600">
-                                  Progress to {
-                                    (() => {
-                                      const nextTierObj = commissionTiers.find(t => t.level === tier.level + 1);
-                                      return nextTierObj ? nextTierObj.name : 'Next Tier';
-                                    })()
-                                  }
-                                </span>
-                                <span className="text-gray-900">60%</span>
-                              </div>
-                              <Progress value={60} className="h-2" />
-                            </div>
-                          )}
-                        </motion.div>
+                          <div className="flex items-center space-x-2">
+                            <span className={`text-sm font-semibold ${
+                              tier.tier === currentTier.tier
+                                ? 'text-orange-600'
+                                : 'text-gray-600'
+                            }`}>
+                              {tier.commission}%
+                            </span>
+                            {tier.tier === currentTier.tier && (
+                              <Badge className="bg-orange-100 text-orange-700 border-orange-200">
+                                Current
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
                       ))}
-                    </motion.div>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-100">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Sparkles className="h-4 w-4 text-orange-500" />
+                        <h4 className="font-medium text-gray-900">Commission Bonus</h4>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Earn an additional 2% commission on all sales when you maintain a 4.5+ star rating
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
               )}
@@ -366,42 +392,42 @@ export default function SellerDashboard() {
                       animate="visible"
                       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                     >
-                      {mockPeekerDatasets.map((dataset) => (
+                      {mockListings.map((listing) => (
                         <motion.div
-                          key={dataset.id}
+                          key={listing.id}
                           variants={itemVariants}
                         >
                           <Card className="hover:shadow-lg transition-all duration-300 bg-white/50 backdrop-blur-sm border-gray-100">
                             <CardContent className="p-4">
                               <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-semibold text-lg text-gray-900">{dataset.title}</h3>
+                                <h3 className="font-semibold text-lg text-gray-900">{listing.title}</h3>
                                 <Badge className="bg-amber-50 text-amber-700 border-amber-200">
                                   <Star className="w-3 h-3 mr-1" />
-                                  {dataset.quality}% Quality
+                                  {listing.leads.toLocaleString()} leads
                                 </Badge>
                               </div>
-                              <p className="text-sm text-gray-600 mb-4">{dataset.description}</p>
                               <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center text-sm text-gray-500">
                                   <Users className="w-4 h-4 mr-1" />
-                                  {dataset.size.toLocaleString()} leads
+                                  {listing.price.toLocaleString()}
                                 </div>
                                 <div className="font-semibold text-gray-900">
-                                  {formatCurrency(dataset.price)}
-                </div>
-              </div>
+                                  {new Date(listing.lastUpdated).toLocaleDateString()}
+                                </div>
+                              </div>
                               <div className="flex flex-wrap gap-2 mb-4">
-                                {dataset.tags.map((tag) => (
-                                  <Badge key={tag} variant="secondary" className="text-xs bg-gray-50 text-gray-700 border-gray-200">
-                                    {tag}
-                                  </Badge>
-            ))}
-          </div>
+                                <Badge
+                                  variant="default"
+                                  className="bg-orange-100 text-orange-700"
+                                >
+                                  {listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
+                                </Badge>
+                              </div>
                               <Button 
                                 className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 hover:border-gray-300"
                                 variant="outline"
                               >
-                                <Download className="w-4 h-4 mr-2" />
+                                <Upload className="w-4 h-4 mr-2" />
                                 Import Dataset
                               </Button>
                             </CardContent>
