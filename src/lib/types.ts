@@ -28,6 +28,9 @@ export interface Listing {
     rating: number;
     lastSoldCount: number;
     qualityScore: number;
+    totalCount: number;
+    remainingCount: number;
+    lastUpdated: string;
   };
   previewRecords: Array<{
     name: string;
@@ -44,10 +47,13 @@ export type PreviewRecord = {
   email: string;
 }
 
-export type ListingStats = {
+export interface ListingStats {
   rating: number;
   lastSoldCount: number;
   qualityScore: number;
+  remainingCount: number;
+  totalCount: number;
+  lastUpdated: string;
 }
 
 // Seller Dashboard Types

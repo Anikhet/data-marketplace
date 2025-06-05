@@ -82,9 +82,12 @@ export default function ListingPage() {
           ],
           stats: {
             rating: 4.8,
-            lastSoldCount: 156,
-            qualityScore: 95,
-          },
+            lastSoldCount: 45,
+            qualityScore: 92,
+            totalCount: 1000,
+            remainingCount: 250,
+            lastUpdated: '2024-03-15'
+          }
         };
 
         // Simulate API delay

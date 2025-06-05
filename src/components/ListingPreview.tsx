@@ -7,13 +7,15 @@ import {
   useReactTable,
   CellContext,
 } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
-import { Star, Shield, Clock, TrendingUp, AlertCircle } from 'lucide-react';
+import { Plus, Shield, Clock, TrendingUp, AlertCircle, Star, CheckCircle2, Users, Lock } from 'lucide-react';
 import { ListingPreviewProps } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { motion } from 'framer-motion';
 
 interface PreviewRecord {
   name: string;
@@ -60,6 +62,45 @@ const mockPreviewRecords: PreviewRecord[] = [
     phone: '+1 (555) 567-8901'
   }
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+
+
+const badgeVariants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 20
+    }
+  }
+};
 
 export function ListingPreview({ listing }: ListingPreviewProps) {
   const [selectedColumns, setSelectedColumns] = useState<string[]>(['name', 'title', 'company', 'email']);
@@ -135,86 +176,165 @@ export function ListingPreview({ listing }: ListingPreviewProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <h1 className="text-2xl font-bold mb-2 text-gray-900">{listing.title}</h1>
-        <p className="text-gray-600">{listing.description}</p>
-      </div>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="bg-white rounded-lg shadow-sm"
+    >
+      {/* Header with Verification Badge */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6 border-b border-gray-100"
+      >
+        <div className="flex items-start justify-between">
+          <div>
+            <motion.div 
+              variants={itemVariants}
+              className="flex items-center space-x-2 mb-2"
+            >
+              <h1 className="text-2xl font-bold text-gray-900">{listing.title}</h1>
+              <motion.div variants={badgeVariants}>
+                <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                  Peeker Verified
+                </Badge>
+              </motion.div>
+            </motion.div>
+            <motion.p 
+              variants={itemVariants}
+              className="text-gray-600"
+            >
+              {listing.description}
+            </motion.p>
+          </div>
+          <motion.div variants={badgeVariants}>
+            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+              <Lock className="w-3 h-3 mr-1" />
+              Limited Availability
+            </Badge>
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* Metadata Tags */}
-      <div className="p-6 border-b border-gray-100">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6 border-b border-gray-100"
+      >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-amber-500" />
-            <div>
-              <p className="text-sm text-gray-500">Niche</p>
-              <p className="font-medium text-gray-900">{listing.metadata.niche}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Shield className="h-5 w-5 text-emerald-500" />
-            <div>
-              <p className="text-sm text-gray-500">Source</p>
-              <p className="font-medium text-gray-900">{listing.metadata.source}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Clock className="h-5 w-5 text-sky-500" />
-            <div>
-              <p className="text-sm text-gray-500">Freshness</p>
-              <p className="font-medium text-gray-900">{listing.metadata.freshness}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Star className="h-5 w-5 text-amber-500" />
-            <div>
-              <p className="text-sm text-gray-500">Exclusivity</p>
-              <p className="font-medium text-gray-900">{listing.metadata.exclusivityLevel}</p>
-            </div>
-          </div>
+          {[
+            { icon: TrendingUp, label: 'Niche', value: listing.metadata.niche, color: 'text-amber-500' },
+            { icon: Shield, label: 'Source', value: listing.metadata.source, color: 'text-emerald-500' },
+            { icon: Clock, label: 'Freshness', value: listing.metadata.freshness, color: 'text-sky-500' },
+            { icon: Star, label: 'Exclusivity', value: listing.metadata.exclusivityLevel, color: 'text-amber-500' }
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              className="flex items-center space-x-2"
+            >
+              <item.icon className={`h-5 w-5 ${item.color}`} />
+              <div>
+                <p className="text-sm text-gray-500">{item.label}</p>
+                <p className="font-medium text-gray-900">{item.value}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Stats */}
-      <div className="p-6 border-b border-gray-100 bg-gray-50">
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <p className="text-sm text-gray-500">Rating</p>
-            <div className="flex items-center">
-              <Star className="h-5 w-5 text-amber-400" />
-              <span className="ml-1 font-medium text-gray-900">{listing.stats.rating}</span>
-            </div>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Last Sold</p>
-            <p className="font-medium text-gray-900">{listing.stats.lastSoldCount} times</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Quality Score</p>
-            <p className="font-medium text-gray-900">{listing.stats.qualityScore}/100</p>
-          </div>
+      {/* Enhanced Stats with Quality Indicators */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6 border-b border-gray-100 bg-gray-50"
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            {
+              label: 'Quality Score',
+              value: listing.stats.qualityScore,
+              icon: Star,
+              color: 'text-emerald-500',
+              progress: true
+            },
+            {
+              label: 'Verification Rate',
+              value: '98% Verified',
+              icon: CheckCircle2,
+              color: 'text-emerald-500'
+            },
+            {
+              label: 'Availability',
+              value: `${listing.stats.remainingCount} remaining`,
+              icon: Users,
+              color: 'text-amber-500'
+            },
+            {
+              label: 'Last Updated',
+              value: listing.stats.lastUpdated,
+              icon: Clock,
+              color: 'text-sky-500'
+            }
+          ].map((stat) => (
+            <motion.div
+              key={stat.label}
+              variants={itemVariants}
+            >
+              <p className="text-sm text-gray-500">{stat.label}</p>
+              <div className="flex items-center space-x-2">
+                {stat.progress ? (
+                  <>
+                    <Progress value={stat.value} className="w-20 h-2" />
+                    <span className="font-medium text-gray-900">{stat.value}/100</span>
+                  </>
+                ) : (
+                  <>
+                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                    <span className="font-medium text-gray-900">{stat.value}</span>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Preview Records */}
-      <div className="p-6">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6"
+      >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Preview Records</h2>
-          <button
+          <motion.div variants={itemVariants}>
+            <h2 className="text-lg font-semibold text-gray-900">Preview Records</h2>
+            <p className="text-sm text-gray-500">Sample of verified contacts from this exclusive list</p>
+          </motion.div>
+          <motion.button
+            variants={itemVariants}
             onClick={() => addColumn('phone')}
             className="flex items-center text-sm text-gray-600 hover:text-gray-900"
           >
             <Plus className="w-4 h-4 mr-1" />
             Add Column
-          </button>
+          </motion.button>
         </div>
 
-        <div className="overflow-x-auto">
+        <motion.div 
+          variants={containerVariants}
+          className="overflow-x-auto"
+        >
           <table className="min-w-full divide-y divide-gray-200 text-sm">
             <thead className="bg-gray-50">
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
+                <motion.tr key={headerGroup.id} variants={itemVariants}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
@@ -223,12 +343,16 @@ export function ListingPreview({ listing }: ListingPreviewProps) {
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
-                </tr>
+                </motion.tr>
               ))}
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="hover:bg-gray-50">
+                <motion.tr 
+                  key={row.id} 
+                  variants={itemVariants}
+                  className="hover:bg-gray-50"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
@@ -237,31 +361,45 @@ export function ListingPreview({ listing }: ListingPreviewProps) {
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* CTA */}
-      <div className="p-6 border-t border-gray-100 bg-gray-50">
-        <Button
-          onClick={handleRequestList}
-          disabled={isLoading}
-          className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 hover:border-gray-300"
-          variant="outline"
-        >
-          {isLoading ? (
-            <div className="flex items-center space-x-2">
-              <Skeleton className="h-4 w-4 rounded-full" />
-              <span>Processing...</span>
-            </div>
-          ) : (
-            'Request This List'
-          )}
-        </Button>
-      </div>
-    </div>
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6 border-t border-gray-100 bg-gray-50"
+      >
+        <motion.div variants={itemVariants} className="mb-4">
+          <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+            <span>Limited Availability</span>
+            <span>{listing.stats.remainingCount} spots left</span>
+          </div>
+          <Progress value={(listing.stats.totalCount - listing.stats.remainingCount) / listing.stats.totalCount * 100} className="h-2" />
+        </motion.div>
+        <motion.div variants={itemVariants}>
+          <Button
+            onClick={handleRequestList}
+            disabled={isLoading}
+            className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 hover:border-gray-300"
+            variant="outline"
+          >
+            {isLoading ? (
+              <div className="flex items-center space-x-2">
+                <Skeleton className="h-4 w-4 rounded-full" />
+                <span>Processing...</span>
+              </div>
+            ) : (
+              'Request This List'
+            )}
+          </Button>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 } 
