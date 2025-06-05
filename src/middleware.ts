@@ -4,7 +4,7 @@ import { createServerClient } from '@supabase/ssr'
 import { CookieOptions } from '@supabase/ssr'
 
 // List of public routes that don't require authentication
-const publicRoutes = ['/', '/login', '/auth/callback', '/auth/auth-code-error']
+const publicRoutes = ['/','/login']
 
 export async function middleware(request: NextRequest) {
   const response = await updateSession(request)

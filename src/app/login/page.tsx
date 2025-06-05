@@ -92,7 +92,7 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form className='flex flex-col gap-6 ' onSubmit={handleSubmit(onSubmit)}>
             <CardContent>
               <div className="grid w-full items-center gap-4">
                 {/* Email Field */}
