@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { login } from './actions'
 import { useActionState } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -14,13 +14,19 @@ interface FormState {
   error?: string
 }
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  const redirectTo = typeof searchParams.redirectedFrom === 'string' 
-    ? searchParams.redirectedFrom 
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default function LoginPage({ searchParams }: PageProps) {
+  const [params, setParams] = useState<{ [key: string]: string | string[] | undefined }>({})
+  
+  useEffect(() => {
+    searchParams.then(setParams)
+  }, [searchParams])
+
+  const redirectTo = typeof params.redirectedFrom === 'string' 
+    ? params.redirectedFrom 
     : '/dashboard'
   const router = useRouter()
 

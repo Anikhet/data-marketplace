@@ -25,6 +25,7 @@ export default function Navigation({
         { title: "Home", isLink: true, href: "/" },
         { title: "Buyer Dashboard", isLink: true, href: "/dashboard/buyer" },
         { title: "Seller Dashboard", isLink: true, href: "/dashboard/seller" },
+        { title: "Datasets", isLink: true, href: "/dashboard/datasets" },
       ]
     : [{ title: "Home", isLink: true, href: "/" }];
 

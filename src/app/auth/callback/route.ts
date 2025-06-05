@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
@@ -8,10 +8,7 @@ export async function GET(request: Request) {
   const next = requestUrl.searchParams.get('next') ?? '/dashboard'
 
   if (code) {
-    const cookieStore = cookies()
-    const supabase = createClient()
-    
-    // Exchange the code for a session
+    const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
@@ -21,5 +18,5 @@ export async function GET(request: Request) {
   }
 
   // Return the user to an error page with some instructions
-  return NextResponse.redirect(`${requestUrl.origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`${requestUrl.origin}/auth-error`)
 } 

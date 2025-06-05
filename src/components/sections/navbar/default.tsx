@@ -70,7 +70,7 @@ export default function Navbar({
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   const handleSignOut = async () => {
     await signOut();
