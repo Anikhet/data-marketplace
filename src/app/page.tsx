@@ -9,7 +9,7 @@ import { ListingsProvider } from '@/contexts/listings-context';
 export default function Home() {
   return (
     <ListingsProvider>
-      <main className="min-h-screen">
+      <main className="min-h-screen ">
          
         {/* <HeroSection /> */}
         <SearchSection />

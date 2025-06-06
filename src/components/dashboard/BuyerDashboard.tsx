@@ -20,7 +20,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useState } from 'react';
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 
 interface ListSuggestion {
   id: string;
@@ -43,13 +43,7 @@ interface PurchaseHistory {
   status: 'active' | 'expired' | 'pending';
 }
 
-interface ActiveRequest {
-  id: string;
-  title: string;
-  requestDate: string;
-  status: 'processing' | 'completed' | 'failed';
-  progress: number;
-}
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -101,39 +95,8 @@ const badgeVariants = {
   }
 };
 
-const purchaseCardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 15
-    }
-  },
-  hover: {
-    scale: 1.02,
-    transition: {
-      type: "spring",
-      stiffness: 400,
-      damping: 10
-    }
-  }
-};
 
-const statusBadgeVariants = {
-  hidden: { scale: 0.8, opacity: 0 },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 200,
-      damping: 20
-    }
-  }
-};
+
 
 const mockPurchaseHistory: PurchaseHistory[] = [
   {
@@ -158,20 +121,12 @@ const mockPurchaseHistory: PurchaseHistory[] = [
   }
 ];
 
-const mockActiveRequests: ActiveRequest[] = [
-  {
-    id: "1",
-    title: "Custom List: FinTech Startups",
-    requestDate: "2024-03-20",
-    status: 'processing',
-    progress: 65
-  }
-];
+
 
 export default function BuyerDashboard() {
   const { buyerStats } = useDashboard();
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedTab, setSelectedTab] = useState<'purchases' | 'requests'>('purchases');
+
 
   const listSuggestions: ListSuggestion[] = [
     {
@@ -288,251 +243,10 @@ export default function BuyerDashboard() {
       </motion.div>
 
       {/* Main Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-[2fr_1fr]  gap-6">
         {/* Left Column: Purchases/Requests */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Tabs */}
-          <div className="flex space-x-4 border-b border-gray-200">
-            <button
-              className={`pb-4 px-1 ${
-                selectedTab === 'purchases'
-                  ? 'border-b-2 border-orange-500 text-orange-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setSelectedTab('purchases')}
-            >
-              Purchased Lists
-            </button>
-            <button
-              className={`pb-4 px-1 ${
-                selectedTab === 'requests'
-                  ? 'border-b-2 border-orange-500 text-orange-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setSelectedTab('requests')}
-            >
-              Active Requests
-            </button>
-          </div>
-
-          {/* Content */}
-          {selectedTab === 'purchases' ? (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-4"
-            >
-              {mockPurchaseHistory.map((purchase, index) => (
-                <motion.div
-                  key={purchase.id}
-                  variants={purchaseCardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  whileHover="hover"
-                  custom={index}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="overflow-hidden bg-white/50 backdrop-blur-sm border-gray-100 hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <motion.h3 
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="font-semibold text-gray-900 text-lg"
-                          >
-                            {purchase.title}
-                          </motion.h3>
-                          <motion.p 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-sm text-gray-500"
-                          >
-                            Purchased on {new Date(purchase.purchaseDate).toLocaleDateString()}
-                          </motion.p>
-                        </div>
-                        <motion.div
-                          variants={statusBadgeVariants}
-                          initial="hidden"
-                          animate="visible"
-                          transition={{ delay: 0.4 }}
-                        >
-                          <Badge
-                            variant={purchase.status === 'active' ? 'default' : 'secondary'}
-                            className={`${
-                              purchase.status === 'active' 
-                                ? 'bg-orange-100 text-orange-700 hover:bg-orange-200' 
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                            } transition-colors duration-200`}
-                          >
-                            {purchase.status === 'active' ? 'Active' : 'Expired'}
-                          </Badge>
-                        </motion.div>
-                      </div>
-                      <motion.div 
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="grid grid-cols-2 gap-4 mb-4"
-                      >
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-sm text-gray-500">Price Paid</p>
-                          <p className="font-medium text-gray-900">${purchase.price}</p>
-                        </div>
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-sm text-gray-500">Card Used</p>
-                          <p className="font-medium text-gray-900">•••• {purchase.cardLast4}</p>
-                        </div>
-                      </motion.div>
-                      <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <Clock className="h-4 w-4 text-gray-400" />
-                          <span className="text-sm text-gray-500">
-                            Last verified: {new Date(purchase.lastVerified).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-orange-600 border-orange-200 hover:bg-orange-50 transition-colors duration-200"
-                          >
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            Re-verify
-                          </Button>
-                        </motion.div>
-                      </motion.div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <div className="space-y-4">
-              {mockActiveRequests.map((request) => (
-                <Card key={request.id}>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{request.title}</h3>
-                        <p className="text-sm text-gray-500">
-                          Requested on {new Date(request.requestDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="default"
-                        className="bg-orange-100 text-orange-700"
-                      >
-                        Processing
-                      </Badge>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Progress</span>
-                        <span>{request.progress}%</span>
-                      </div>
-                      <Progress value={request.progress} className="h-2" />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right Column: Upsells and Suggestions */}
-        <div className="space-y-6">
-          {/* Verification Reminder */}
-          {needsVerification.length > 0 && (
-            <Card className="bg-orange-50 border-orange-100">
-              <CardContent className="p-6">
-                <div className="flex items-start space-x-3">
-                  <AlertCircle className="h-5 w-5 text-orange-500 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
-                      Data Verification Needed
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      {needsVerification.length} of your lists haven&apos;t been verified in over 30 days.
-                      Keep your data fresh and accurate.
-                    </p>
-                    <Button
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-                      onClick={() => {/* TODO: Implement bulk verification */}}
-                    >
-                      Verify All Lists
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Agency Partnership */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-3">
-                <Building2 className="h-5 w-5 text-orange-500 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Partner with Top Agencies
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Connect with our network of expert agencies to maximize the value of your data.
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
-                    onClick={() => {/* TODO: Implement agency connection */}}
-                  >
-                    Find an Agency
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Premium Features */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-3">
-                <Sparkles className="h-5 w-5 text-orange-500 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Upgrade to Premium
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Get access to advanced features, priority support, and exclusive data sets.
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
-                    onClick={() => {/* TODO: Implement upgrade flow */}}
-                  >
-                    View Premium Features
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 ">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -623,75 +337,7 @@ export default function BuyerDashboard() {
                     </Card>
                   </motion.div>
 
-                  {/* Partner Services */}
-                  <motion.div variants={cardVariants}>
-                    <Card className="bg-white/50 backdrop-blur-sm border-gray-100">
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle>Partner Services</CardTitle>
-                          <motion.div variants={badgeVariants}>
-                            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                              Available
-                            </Badge>
-                          </motion.div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <motion.div 
-                          variants={containerVariants}
-                          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                        >
-                          {[
-                            {
-                              icon: Building2,
-                              title: 'Data Verification',
-                              description: 'Ensure your list data is accurate and up-to-date with our verification service.',
-                              color: 'text-blue-500'
-                            },
-                            {
-                              icon: TrendingUp,
-                              title: 'List Enhancement',
-                              description: 'Add valuable insights and additional data points to your existing lists.',
-                              color: 'text-emerald-500'
-                            }
-                          ].map((service) => (
-                            <motion.div
-                              key={service.title}
-                              variants={itemVariants}
-                              whileHover={{ scale: 1.02 }}
-                              className="p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-gray-100 hover:shadow-md transition-all duration-200"
-                            >
-                              <motion.div 
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="flex items-center space-x-2 mb-2"
-                              >
-                                <service.icon className={`w-5 h-5 ${service.color}`} />
-                                <h4 className="font-medium text-gray-900">{service.title}</h4>
-                              </motion.div>
-                              <motion.p 
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                                className="text-sm text-gray-600 mb-4"
-                              >
-                                {service.description}
-                              </motion.p>
-                              <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                              >
-                                <Button variant="outline" className="w-full hover:bg-gray-50">
-                                  Learn More
-                                </Button>
-                              </motion.div>
-                            </motion.div>
-                          ))}
-                        </motion.div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
+         
                 </motion.div>
               )}
 
@@ -808,6 +454,159 @@ export default function BuyerDashboard() {
           </TabsContent>
         </AnimatePresence>
       </Tabs>
+     
+
+        {/* Right Column: Upsells and Suggestions */}
+        <div className="space-y-6 mt-17">
+          {/* Verification Reminder */}
+          {needsVerification.length > 0 && (
+            <Card className="bg-orange-50 border-orange-100">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="h-5 w-5 text-orange-500 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Data Verification Needed
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {needsVerification.length} of your lists haven&apos;t been verified in over 30 days.
+                      Keep your data fresh and accurate.
+                    </p>
+                    <Button
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                      onClick={() => {/* TODO: Implement bulk verification */}}
+                    >
+                      Verify All Lists
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Agency Partnership */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-3">
+                <Building2 className="h-5 w-5 text-orange-500 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Partner with Top Agencies
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Connect with our network of expert agencies to maximize the value of your data.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
+                    onClick={() => {/* TODO: Implement agency connection */}}
+                  >
+                    Find an Agency
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Premium Features */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-3">
+                <Sparkles className="h-5 w-5 text-orange-500 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Upgrade to Premium
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Get access to advanced features, priority support, and exclusive data sets.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
+                    onClick={() => {/* TODO: Implement upgrade flow */}}
+                  >
+                    View Premium Features
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+               {/* Partner Services */}
+                  <motion.div variants={cardVariants}>
+                    <Card className="bg-white/50 backdrop-blur-sm border-gray-100">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle>Partner Services</CardTitle>
+                          <motion.div variants={badgeVariants}>
+                            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                              Available
+                            </Badge>
+                          </motion.div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <motion.div 
+                          variants={containerVariants}
+                          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        >
+                          {[
+                            {
+                              icon: Building2,
+                              title: 'Data Verification',
+                              description: 'Ensure your list data is accurate and up-to-date with our verification service.',
+                              color: 'text-blue-500'
+                            },
+                            {
+                              icon: TrendingUp,
+                              title: 'List Enhancement',
+                              description: 'Add valuable insights and additional data points to your existing lists.',
+                              color: 'text-emerald-500'
+                            }
+                          ].map((service) => (
+                            <motion.div
+                              key={service.title}
+                              variants={itemVariants}
+                              whileHover={{ scale: 1.02 }}
+                              className="p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-gray-100 hover:shadow-md transition-all duration-200"
+                            >
+                              <motion.div 
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="flex items-center space-x-2 mb-2"
+                              >
+                                <service.icon className={`w-5 h-5 ${service.color}`} />
+                                <h4 className="font-medium text-gray-900">{service.title}</h4>
+                              </motion.div>
+                              <motion.p 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3 }}
+                                className="text-sm text-gray-600 mb-4"
+                              >
+                                {service.description}
+                              </motion.p>
+                              <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <Button variant="outline" className="w-full hover:bg-gray-50">
+                                  Learn More
+                                </Button>
+                              </motion.div>
+                            </motion.div>
+                          ))}
+                        </motion.div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+
+    
 
    
    
