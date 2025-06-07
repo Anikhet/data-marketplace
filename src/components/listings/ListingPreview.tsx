@@ -1,5 +1,3 @@
-
-
 import {
   ColumnDef,
   flexRender,
@@ -8,7 +6,7 @@ import {
   CellContext,
 } from '@tanstack/react-table';
 import { Plus, Shield, Clock, TrendingUp, AlertCircle, Star, CheckCircle2, Users, Lock } from 'lucide-react';
-import { ListingPreviewProps } from '@/lib/types';
+import { ListingPreviewProps, Listing } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -16,6 +14,15 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
+import EnrichmentsPopup from './EnrichmentsPopup';
+import { useAuth } from '@/contexts/auth-context';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { ListingCard } from '../home/ListingCard';
 
 interface PreviewRecord {
   name: string;
@@ -87,8 +94,6 @@ const itemVariants = {
   }
 };
 
-
-
 const badgeVariants = {
   hidden: { scale: 0.8, opacity: 0 },
   visible: {
@@ -102,10 +107,80 @@ const badgeVariants = {
   }
 };
 
+// Mock data for FAQ
+const faqItems = [
+  {
+    question: "What data is included in this list?",
+    answer: "This list includes verified professional contacts with Name, Title, Company, and Email. Phone numbers are available as an enrichment.",
+  },
+  {
+    question: "How fresh is the data?",
+    answer: "The data freshness is indicated in the listing details (e.g., Updated Weekly, Updated Daily). We strive to provide the most up-to-date information possible.",
+  },
+  {
+    question: "How is the data verified?",
+    answer: "Our data is verified through a multi-step process including automated checks and manual review by our team. The verification rate is displayed in the stats section.",
+  },
+  {
+    question: "What is the exclusivity level?",
+    answer: "Exclusivity levels indicate how widely the list is available. Premium lists are offered to a limited number of buyers to maintain their value.",
+  },
+];
+
 export default function ListingPreview({ listing }: ListingPreviewProps) {
   const [selectedColumns, setSelectedColumns] = useState<string[]>(['name', 'title', 'company', 'email']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showEnrichments, setShowEnrichments] = useState(false);
+  const { isAuthenticated, showAuthModal } = useAuth();
+
+  const suggestedLists: Listing[] = [
+    {
+      id: 'suggested-1',
+      title: 'Related Industry Contacts',
+      description: 'Find more leads in similar industries.',
+      price: 0, // Placeholder price
+      isVerified: true,
+      seller: { id: 'seller-auto-1', name: 'System Recommends', rating: 5.0 },
+      metadata: { niche: listing.metadata.niche, source: 'System', freshness: 'Varies', exclusivityLevel: 'Standard' },
+      stats: { rating: 5.0, lastSoldCount: 0, qualityScore: 90, totalCount: 0, remainingCount: 0, lastUpdated: 'N/A' },
+      volume: 'Varies',
+      type: 'Mixed',
+      industry: listing.industry,
+      jobTitle: 'Mixed',
+      previewRecords: [],
+    },
+    {
+      id: 'suggested-2',
+      title: `More from ${listing.seller.name}`,
+      description: 'Explore other lists from this highly-rated seller.',
+      price: 0,
+      isVerified: true,
+      seller: { id: listing.seller.id, name: listing.seller.name, rating: listing.seller.rating },
+      metadata: { niche: 'Varies', source: 'Seller', freshness: 'Varies', exclusivityLevel: 'Varies' },
+      stats: { rating: listing.seller.rating, lastSoldCount: 0, qualityScore: 95, totalCount: 0, remainingCount: 0, lastUpdated: 'N/A' },
+      volume: 'Varies',
+      type: 'Varies',
+      industry: 'Varies',
+      jobTitle: 'Varies',
+      previewRecords: [],
+    },
+    {
+      id: 'suggested-3',
+      title: 'Lists with Phone Enrichment',
+      description: 'Find lists where phone numbers are available as an enrichment.',
+      price: 0,
+      isVerified: true,
+      seller: { id: 'seller-auto-2', name: 'System Recommends', rating: 4.8 },
+      metadata: { niche: 'Varies', source: 'System', freshness: 'Varies', exclusivityLevel: 'Varies' },
+      stats: { rating: 4.8, lastSoldCount: 0, qualityScore: 92, totalCount: 0, remainingCount: 0, lastUpdated: 'N/A' },
+      volume: 'Varies',
+      type: 'Email/Phone',
+      industry: 'Varies',
+      jobTitle: 'Varies',
+      previewRecords: [],
+    },
+  ];
 
   const addColumn = (column: string) => {
     if (!selectedColumns.includes(column)) {
@@ -164,6 +239,21 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
     }
   };
 
+  const handleEnrichmentsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      showAuthModal();
+      return;
+    }
+    setShowEnrichments(true);
+  };
+
+  const handleApplyEnrichments = (selectedEnrichments: string[]) => {
+    console.log('Applying enrichments:', selectedEnrichments);
+    setShowEnrichments(false);
+  };
+
   if (error) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6">
@@ -179,22 +269,22 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white rounded-lg shadow-sm"
+      className="bg-white rounded-lg shadow-sm overflow-hidden"
     >
-      {/* Header with Verification Badge */}
+      {/* Header Section */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="p-6 border-b border-gray-100"
       >
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div className="flex-1 min-w-0">
             <motion.div 
               variants={itemVariants}
               className="flex items-center space-x-2 mb-2"
             >
-              <h1 className="text-2xl font-bold text-gray-900">{listing.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 truncate">{listing.title}</h1>
               <motion.div variants={badgeVariants}>
                 <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
@@ -204,16 +294,24 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             </motion.div>
             <motion.p 
               variants={itemVariants}
-              className="text-gray-600"
+              className="text-gray-600 line-clamp-2"
             >
               {listing.description}
             </motion.p>
           </div>
-          <motion.div variants={badgeVariants}>
+          <motion.div variants={badgeVariants} className="flex flex-col items-end gap-2">
             <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
               <Lock className="w-3 h-3 mr-1" />
               Limited Availability
             </Badge>
+            <Button 
+              variant="outline"
+              className="border-orange-200 text-orange-600 hover:bg-orange-50"
+              onClick={handleEnrichmentsClick}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Enrichments
+            </Button>
           </motion.div>
         </div>
       </motion.div>
@@ -223,7 +321,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-b border-gray-100"
+        className="p-6 border-b border-gray-100 bg-gray-50"
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
@@ -238,9 +336,9 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
               className="flex items-center space-x-2"
             >
               <item.icon className={`h-5 w-5 ${item.color}`} />
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm text-gray-500">{item.label}</p>
-                <p className="font-medium text-gray-900">{item.value}</p>
+                <p className="font-medium text-gray-900 truncate">{item.value}</p>
               </div>
             </motion.div>
           ))}
@@ -252,7 +350,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-b border-gray-100 bg-gray-50"
+        className="p-6 border-b border-gray-100"
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
@@ -285,6 +383,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             <motion.div
               key={stat.label}
               variants={itemVariants}
+              className="flex flex-col"
             >
               <p className="text-sm text-gray-500">{stat.label}</p>
               <div className="flex items-center space-x-2">
@@ -310,9 +409,9 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6"
+        className="p-6 border-b border-gray-100"
       >
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <motion.div variants={itemVariants}>
             <h2 className="text-lg font-semibold text-gray-900">Preview Records</h2>
             <p className="text-sm text-gray-500">Sample of verified contacts from this exclusive list</p>
@@ -320,7 +419,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
           <motion.button
             variants={itemVariants}
             onClick={() => addColumn('phone')}
-            className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+            className="flex items-center text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap"
           >
             <Plus className="w-4 h-4 mr-1" />
             Add Column
@@ -329,7 +428,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
 
         <motion.div 
           variants={containerVariants}
-          className="overflow-x-auto"
+          className="overflow-x-auto rounded-lg border border-gray-200"
         >
           <table className="min-w-full divide-y divide-gray-200 text-sm">
             <thead className="bg-gray-50">
@@ -368,38 +467,92 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         </motion.div>
       </motion.div>
 
-      {/* CTA */}
+      {/* Suggested Lists Section */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6 border-b border-gray-100 bg-gray-50"
+      >
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Suggested Lists</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {suggestedLists.map((suggestedListing) => (
+            <ListingCard 
+              key={suggestedListing.id}
+              listing={suggestedListing as Listing}
+              onRequestList={async () => {}}
+              isLoading={false}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      {/* FAQ Section */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="p-6 border-b border-gray-100"
+      >
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Frequently Asked Questions</h2>
+        <Accordion type="single" collapsible className="w-full">
+          {faqItems.map((item, index) => (
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger>{item.question}</AccordionTrigger>
+              <AccordionContent>{item.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </motion.div>
+
+      {/* CTA Section */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="p-6 border-t border-gray-100 bg-gray-50"
       >
-        <motion.div variants={itemVariants} className="mb-4">
-          <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-            <span>Limited Availability</span>
-            <span>{listing.stats.remainingCount} spots left</span>
-          </div>
-          <Progress value={(listing.stats.totalCount - listing.stats.remainingCount) / listing.stats.totalCount * 100} className="h-2" />
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          <Button
-            onClick={handleRequestList}
-            disabled={isLoading}
-            className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 hover:border-gray-300"
-            variant="outline"
-          >
-            {isLoading ? (
-              <div className="flex items-center space-x-2">
-                <Skeleton className="h-4 w-4 rounded-full" />
-                <span>Processing...</span>
-              </div>
-            ) : (
-              'Request This List'
-            )}
-          </Button>
-        </motion.div>
+        <div className="max-w-2xl mx-auto">
+          <motion.div variants={itemVariants} className="mb-4">
+            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+              <span>Limited Availability</span>
+              <span>{listing.stats.remainingCount} spots left</span>
+            </div>
+            <Progress value={(listing.stats.totalCount - listing.stats.remainingCount) / listing.stats.totalCount * 100} className="h-2" />
+          </motion.div>
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
+            <Button
+              onClick={handleRequestList}
+              disabled={isLoading}
+              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              {isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <Skeleton className="h-4 w-4 rounded-full" />
+                  <span>Processing...</span>
+                </div>
+              ) : (
+                'Request This List'
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 border-orange-200 text-orange-600 hover:bg-orange-50"
+              onClick={handleEnrichmentsClick}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Enrichments
+            </Button>
+          </motion.div>
+        </div>
       </motion.div>
+
+      <EnrichmentsPopup
+        isOpen={showEnrichments}
+        onClose={() => setShowEnrichments(false)}
+        onApply={handleApplyEnrichments}
+        totalLeads={parseInt(listing.volume)}
+      />
     </motion.div>
   );
 } 

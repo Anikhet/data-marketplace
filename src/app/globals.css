@@ -5,6 +5,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html, body {
+  overflow-x: hidden;
+
+}
+
 @theme inline {
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);

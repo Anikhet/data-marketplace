@@ -3,13 +3,13 @@ import { Listing } from './types';
 export const mockListings: Listing[] = [
   {
     id: '1',
-    title: 'Tech Startup CEOs',
-    description: 'Comprehensive list of CEOs from Series A to C tech startups',
+    title: 'Instantly LinkedIn Company Followers',
+    description: 'Exclusive list of active LinkedIn company followers from high-growth tech companies. Perfect for targeted outreach and market expansion.',
     industry: 'Technology',
-    jobTitle: 'C-Level',
+    jobTitle: 'Individual Contributor',
     volume: '1000-5000',
-    type: 'Email',
-    price: 2999,
+    type: 'LinkedIn',
+    price: 4999,
     isVerified: true,
     seller: {
       id: 'seller1',
@@ -18,8 +18,8 @@ export const mockListings: Listing[] = [
     },
     metadata: {
       niche: 'Technology',
-      source: 'Company Websites',
-      freshness: 'Updated Weekly',
+      source: 'LinkedIn API',
+      freshness: 'Updated Daily',
       exclusivityLevel: 'Premium'
     },
     stats: {
@@ -33,7 +33,7 @@ export const mockListings: Listing[] = [
     previewRecords: [
       {
         name: 'John Smith',
-        title: 'CEO',
+        title: 'Growth Marketing Manager',
         company: 'TechStart Inc',
         email: 'john@techstart.com'
       }
@@ -41,13 +41,13 @@ export const mockListings: Listing[] = [
   },
   {
     id: '2',
-    title: 'Healthcare Professionals',
-    description: 'Database of healthcare professionals across major US hospitals',
-    industry: 'Healthcare',
+    title: 'Clay Slack Group Users',
+    description: 'Curated list of active users from exclusive Clay Slack communities. High-intent professionals actively engaged in sales and marketing discussions.',
+    industry: 'Technology',
     jobTitle: 'Individual Contributor',
     volume: '5000-10000',
-    type: 'Phone',
-    price: 4999,
+    type: 'Email',
+    price: 7999,
     isVerified: true,
     seller: {
       id: 'seller2',
@@ -55,10 +55,10 @@ export const mockListings: Listing[] = [
       rating: 4.5,
     },
     metadata: {
-      niche: 'Healthcare',
-      source: 'Medical Directories',
-      freshness: 'Updated Monthly',
-      exclusivityLevel: 'Standard'
+      niche: 'Technology',
+      source: 'Slack API',
+      freshness: 'Updated Weekly',
+      exclusivityLevel: 'Premium'
     },
     stats: {
       rating: 4.5,
@@ -71,21 +71,21 @@ export const mockListings: Listing[] = [
     previewRecords: [
       {
         name: 'Sarah Johnson',
-        title: 'Nurse Practitioner',
-        company: 'City Hospital',
-        email: 'sarah@cityhospital.com'
+        title: 'Sales Operations Manager',
+        company: 'Growth Co',
+        email: 'sarah@growthco.com'
       }
     ]
   },
   {
     id: '3',
-    title: 'Finance Directors',
-    description: 'List of finance directors from Fortune 500 companies',
-    industry: 'Finance',
-    jobTitle: 'VP/Director',
+    title: 'DC Tech Week Startups 2025',
+    description: 'Exclusive list of confirmed attendees and speakers from DC Tech Week 2025. Early access to decision-makers from the most promising startups.',
+    industry: 'Technology',
+    jobTitle: 'C-Level',
     volume: '10000+',
-    type: 'LinkedIn',
-    price: 7999,
+    type: 'Email',
+    price: 9999,
     isVerified: true,
     seller: {
       id: 'seller3',
@@ -93,8 +93,8 @@ export const mockListings: Listing[] = [
       rating: 4.9,
     },
     metadata: {
-      niche: 'Finance',
-      source: 'LinkedIn Premium',
+      niche: 'Technology',
+      source: 'Event Registration',
       freshness: 'Updated Daily',
       exclusivityLevel: 'Premium'
     },
@@ -109,32 +109,32 @@ export const mockListings: Listing[] = [
     previewRecords: [
       {
         name: 'Michael Chen',
-        title: 'Finance Director',
-        company: 'Fortune Corp',
-        email: 'mchen@fortunecorp.com'
+        title: 'Founder & CEO',
+        company: 'AI Startup',
+        email: 'mchen@aistartup.com'
       }
     ]
   },
   {
     id: '4',
-    title: 'Retail Managers',
-    description: 'Database of retail store managers from top retail chains',
-    industry: 'Retail',
-    jobTitle: 'Manager',
+    title: 'Smartlead Customers',
+    description: 'Exclusive list of active Smartlead customers. High-value prospects already using email automation tools.',
+    industry: 'Technology',
+    jobTitle: 'VP/Director',
     volume: '0-1000',
     type: 'Email',
-    price: 1999,
-    isVerified: false,
+    price: 14999,
+    isVerified: true,
     seller: {
       id: 'seller4',
       name: 'RetailData Co',
       rating: 4.2,
     },
     metadata: {
-      niche: 'Retail',
-      source: 'Store Directories',
-      freshness: 'Updated Quarterly',
-      exclusivityLevel: 'Basic'
+      niche: 'Technology',
+      source: 'Product Analytics',
+      freshness: 'Updated Daily',
+      exclusivityLevel: 'Premium'
     },
     stats: {
       rating: 4.2,
@@ -147,21 +147,21 @@ export const mockListings: Listing[] = [
     previewRecords: [
       {
         name: 'Lisa Brown',
-        title: 'Store Manager',
-        company: 'Retail Chain',
-        email: 'lisa@retailchain.com'
+        title: 'VP of Sales',
+        company: 'SaaS Co',
+        email: 'lisa@saasco.com'
       }
     ]
   },
   {
     id: '5',
-    title: 'Manufacturing Engineers',
-    description: 'List of manufacturing engineers from automotive industry',
-    industry: 'Manufacturing',
-    jobTitle: 'Individual Contributor',
+    title: 'Slashdot Sales Tech Companies 2025',
+    description: 'Curated list of companies featured in Slashdot\'s 2025 Sales Tech Report. Early access to decision-makers at innovative sales technology companies.',
+    industry: 'Technology',
+    jobTitle: 'C-Level',
     volume: '1000-5000',
-    type: 'Phone',
-    price: 3499,
+    type: 'Email',
+    price: 12999,
     isVerified: true,
     seller: {
       id: 'seller5',
@@ -169,10 +169,10 @@ export const mockListings: Listing[] = [
       rating: 4.6,
     },
     metadata: {
-      niche: 'Manufacturing',
-      source: 'Industry Directories',
-      freshness: 'Updated Monthly',
-      exclusivityLevel: 'Standard'
+      niche: 'Technology',
+      source: 'Industry Reports',
+      freshness: 'Updated Weekly',
+      exclusivityLevel: 'Premium'
     },
     stats: {
       rating: 4.6,
@@ -185,21 +185,21 @@ export const mockListings: Listing[] = [
     previewRecords: [
       {
         name: 'David Wilson',
-        title: 'Senior Engineer',
-        company: 'AutoTech',
-        email: 'dwilson@autotech.com'
+        title: 'CTO',
+        company: 'SalesTech',
+        email: 'dwilson@salestech.com'
       }
     ]
   },
   {
     id: '6',
-    title: 'Education Administrators',
-    description: 'Database of school and university administrators',
-    industry: 'Education',
-    jobTitle: 'Manager',
+    title: 'Stripe Companies 2025',
+    description: 'Exclusive list of companies processing over $1M annually through Stripe. High-value prospects with proven payment processing needs.',
+    industry: 'Technology',
+    jobTitle: 'C-Level',
     volume: '5000-10000',
     type: 'Email',
-    price: 2499,
+    price: 19999,
     isVerified: true,
     seller: {
       id: 'seller6',
@@ -207,10 +207,10 @@ export const mockListings: Listing[] = [
       rating: 4.7,
     },
     metadata: {
-      niche: 'Education',
-      source: 'School Directories',
-      freshness: 'Updated Monthly',
-      exclusivityLevel: 'Standard'
+      niche: 'Technology',
+      source: 'Payment Processing',
+      freshness: 'Updated Daily',
+      exclusivityLevel: 'Premium'
     },
     stats: {
       rating: 4.7,
@@ -223,9 +223,9 @@ export const mockListings: Listing[] = [
     previewRecords: [
       {
         name: 'Robert Taylor',
-        title: 'School Principal',
-        company: 'City High School',
-        email: 'rtaylor@cityhigh.edu'
+        title: 'CEO',
+        company: 'FinTech Startup',
+        email: 'rtaylor@fintech.com'
       }
     ]
   }
