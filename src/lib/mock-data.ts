@@ -9,7 +9,7 @@ export const mockListings: Listing[] = [
     jobTitle: 'Individual Contributor',
     volume: '1000-5000',
     type: 'LinkedIn',
-    price: 4999,
+    price: 50,
     isVerified: true,
     seller: {
       id: 'seller1',
@@ -47,7 +47,7 @@ export const mockListings: Listing[] = [
     jobTitle: 'Individual Contributor',
     volume: '5000-10000',
     type: 'Email',
-    price: 7999,
+    price: 100,
     isVerified: true,
     seller: {
       id: 'seller2',
@@ -85,7 +85,7 @@ export const mockListings: Listing[] = [
     jobTitle: 'C-Level',
     volume: '10000+',
     type: 'Email',
-    price: 9999,
+    price: 40,
     isVerified: true,
     seller: {
       id: 'seller3',
@@ -123,7 +123,7 @@ export const mockListings: Listing[] = [
     jobTitle: 'VP/Director',
     volume: '0-1000',
     type: 'Email',
-    price: 14999,
+    price: 509,
     isVerified: true,
     seller: {
       id: 'seller4',
@@ -161,7 +161,7 @@ export const mockListings: Listing[] = [
     jobTitle: 'C-Level',
     volume: '1000-5000',
     type: 'Email',
-    price: 12999,
+    price: 100,
     isVerified: true,
     seller: {
       id: 'seller5',
@@ -199,7 +199,7 @@ export const mockListings: Listing[] = [
     jobTitle: 'C-Level',
     volume: '5000-10000',
     type: 'Email',
-    price: 19999,
+    price: 200,
     isVerified: true,
     seller: {
       id: 'seller6',

@@ -1,18 +1,10 @@
 'use client';
 
-
-
 import { useEffect, useState } from 'react';
 import { Listing } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
 import ListingPreview from '@/components/listings/ListingPreview';
-
-
-
-
-
-
 
 
 export default function ListingPage() {
@@ -25,6 +17,8 @@ export default function ListingPage() {
 
   useEffect(() => {
     const fetchListing = async () => {
+
+       window.scrollTo({ top: 0, behavior: "smooth" });
       try {
         setIsLoading(true);
         setError(null);

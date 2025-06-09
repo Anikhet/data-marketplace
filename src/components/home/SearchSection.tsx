@@ -1,9 +1,5 @@
-
-
-import Filters from "./filters";
+import Filters from "./filters/index";
 import { HeroSection } from "./HeroSection";
-
-
 
 import { useListingsContext } from "@/contexts/listings-context";
 import { ListingsGrid } from "./ListingGrid";
