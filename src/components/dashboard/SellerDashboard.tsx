@@ -11,9 +11,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Glow from '@/components/ui/glow';
 import { 
 
-  Star, 
+  // Star, 
   TrendingUp, 
-  Users,
+  // Users,
   Trophy,
   Target,
   FileUp,
@@ -25,6 +25,8 @@ import {
 
 } from 'lucide-react';
 import { useState } from 'react';
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface Sale {
   id: string;
@@ -148,6 +150,7 @@ const itemVariants = {
 export default function SellerDashboard() {
   const { sellerStats, recentListings } = useDashboard();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isImporting, setIsImporting] = useState(true);
   const currentTier = commissionTiers[1]; // Example: Silver tier
 
 
@@ -378,7 +381,18 @@ export default function SellerDashboard() {
                 <Card className="bg-white/50 backdrop-blur-sm border-gray-100">
                   <CardHeader className="border-b border-gray-100">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl font-semibold text-gray-900">Import from Peeker</CardTitle>
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="import-mode"
+                            checked={!isImporting}
+                            onCheckedChange={(checked) => setIsImporting(!checked)}
+                          />
+                          <Label htmlFor="import-mode" className="text-sm font-medium text-gray-900">
+                            {isImporting ? 'Import from Peeker' : 'Imported from Peeker'}
+                          </Label>
+                        </div>
+                      </div>
                       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
                         <TrendingUp className="w-4 h-4 mr-1" />
                         AI-Powered Leads
@@ -392,51 +406,90 @@ export default function SellerDashboard() {
                       animate="visible"
                       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                     >
-                      {mockListings.map((listing) => (
-                        <motion.div
-                          key={listing.id}
-                          variants={itemVariants}
-                        >
-                          <Card className="hover:shadow-lg transition-all duration-300 bg-white/50 backdrop-blur-sm border-gray-100">
-                            <CardContent className="p-4">
-                              <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-semibold text-lg text-gray-900">{listing.title}</h3>
-                                <Badge className="bg-amber-50 text-amber-700 border-amber-200">
-                                  <Star className="w-3 h-3 mr-1" />
-                                  {listing.leads.toLocaleString()} leads
-                                </Badge>
-                              </div>
-                              <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center text-sm text-gray-500">
-                                  <Users className="w-4 h-4 mr-1" />
-                                  {listing.price.toLocaleString()}
+                      {isImporting ? (
+                        // Import from Peeker content
+                        mockListings.map((listing) => (
+                          <motion.div
+                            key={listing.id}
+                            variants={itemVariants}
+                            className="relative"
+                          >
+                            <Card className="bg-white hover:bg-gray-50 transition-colors h-full">
+                              <CardContent className="p-6">
+                                <div className="flex items-start justify-between mb-4">
+                                  <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">{listing.title}</h3>
+                                    <p className="text-sm text-gray-500">{listing.leads} leads</p>
+                                  </div>
+                                  <Badge variant="outline" className={getStatusColor(listing.status)}>
+                                    {listing.status}
+                                  </Badge>
                                 </div>
-                                <div className="font-semibold text-gray-900">
-                                  {new Date(listing.lastUpdated).toLocaleDateString()}
+                                <div className="space-y-2 mb-4">
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-500">Price</span>
+                                    <span className="font-medium text-gray-900">{formatCurrency(listing.price)}</span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-500">Last Updated</span>
+                                    <span className="text-gray-900">{listing.lastUpdated}</span>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="flex flex-wrap gap-2 mb-4">
-                                <Badge
-                                  variant="default"
-                                  className="bg-orange-100 text-orange-700"
+                                <Button 
+                                  className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 hover:border-gray-300"
+                                  variant="outline"
                                 >
-                                  {listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
-                                </Badge>
-                              </div>
-                              <Button 
-                                className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 hover:border-gray-300"
-                                variant="outline"
-                              >
-                                <Upload className="w-4 h-4 mr-2" />
-                                Import Dataset
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      ))}
+                                  <Upload className="w-4 h-4 mr-2" />
+                                  Import Dataset
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))
+                      ) : (
+                        // Imported from Peeker content
+                        mockListings.filter(listing => listing.status === 'active').map((listing) => (
+                          <motion.div
+                            key={listing.id}
+                            variants={itemVariants}
+                            className="relative"
+                          >
+                            <Card className="bg-white hover:bg-gray-50 transition-colors h-full">
+                              <CardContent className="p-6">
+                                <div className="flex items-start justify-between mb-4">
+                                  <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">{listing.title}</h3>
+                                    <p className="text-sm text-gray-500">{listing.leads} leads</p>
+                                  </div>
+                                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                                    Imported
+                                  </Badge>
+                                </div>
+                                <div className="space-y-2 mb-4">
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-500">Price</span>
+                                    <span className="font-medium text-gray-900">{formatCurrency(listing.price)}</span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-500">Last Updated</span>
+                                    <span className="text-gray-900">{listing.lastUpdated}</span>
+                                  </div>
+                                </div>
+                                <Button 
+                                  className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 hover:border-emerald-300"
+                                  variant="outline"
+                                >
+                                  <Sparkles className="w-4 h-4 mr-2" />
+                                  View Details
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))
+                      )}
                     </motion.div>
-        </CardContent>
-      </Card>
+                  </CardContent>
+                </Card>
               )}
             </motion.div>
           </TabsContent>

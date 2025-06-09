@@ -128,7 +128,7 @@ const faqItems = [
 ];
 
 export default function ListingPreview({ listing }: ListingPreviewProps) {
-  const [selectedColumns, setSelectedColumns] = useState<string[]>(['name', 'title', 'company', 'email']);
+  const [selectedColumns] = useState<string[]>(['name', 'title', 'company', 'email']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEnrichments, setShowEnrichments] = useState(false);
@@ -182,11 +182,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
     },
   ];
 
-  const addColumn = (column: string) => {
-    if (!selectedColumns.includes(column)) {
-      setSelectedColumns([...selectedColumns, column]);
-    }
-  };
+
 
   const baseColumns: ColumnDef<PreviewRecord>[] = [
     {
@@ -304,14 +300,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
               <Lock className="w-3 h-3 mr-1" />
               Limited Availability
             </Badge>
-            <Button 
-              variant="outline"
-              className="border-orange-200 text-orange-600 hover:bg-orange-50"
-              onClick={handleEnrichmentsClick}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Enrichments
-            </Button>
+       
           </motion.div>
         </div>
       </motion.div>
@@ -416,14 +405,15 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             <h2 className="text-lg font-semibold text-gray-900">Preview Records</h2>
             <p className="text-sm text-gray-500">Sample of verified contacts from this exclusive list</p>
           </motion.div>
-          <motion.button
-            variants={itemVariants}
-            onClick={() => addColumn('phone')}
-            className="flex items-center text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap"
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Column
-          </motion.button>
+  
+               <Button 
+              variant="outline"
+              className="border-orange-200 text-orange-600 hover:bg-orange-50"
+              onClick={handleEnrichmentsClick}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Enrichments
+            </Button>
         </div>
 
         <motion.div 
@@ -520,30 +510,36 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             </div>
             <Progress value={(listing.stats.totalCount - listing.stats.remainingCount) / listing.stats.totalCount * 100} className="h-2" />
           </motion.div>
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
-            <Button
-              onClick={handleRequestList}
-              disabled={isLoading}
-              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
-            >
-              {isLoading ? (
-                <div className="flex items-center space-x-2">
-                  <Skeleton className="h-4 w-4 rounded-full" />
-                  <span>Processing...</span>
-                </div>
-              ) : (
-                'Request This List'
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 border-orange-200 text-orange-600 hover:bg-orange-50"
-              onClick={handleEnrichmentsClick}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Enrichments
-            </Button>
-          </motion.div>
+     <motion.div
+  variants={itemVariants}
+  className="fixed bottom-0 inset-x-0 z-50 flex justify-center backdrop-blur-sm bg-white/80 border-t border-gray-200 px-4 py-4"
+>
+  <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl">
+    <Button
+      onClick={handleRequestList}
+      disabled={isLoading}
+      className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+    >
+      {isLoading ? (
+        <div className="flex items-center space-x-2">
+          <Skeleton className="h-4 w-4 rounded-full" />
+          <span>Processing...</span>
+        </div>
+      ) : (
+        'Request This List'
+      )}
+    </Button>
+    <Button
+      variant="outline"
+      className="flex-1 border-orange-200 text-orange-600 hover:bg-orange-50"
+      onClick={handleEnrichmentsClick}
+    >
+      <Plus className="h-4 w-4 mr-2" />
+      Add Enrichments
+    </Button>
+  </div>
+</motion.div>
+
         </div>
       </motion.div>
 
