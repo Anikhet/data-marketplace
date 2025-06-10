@@ -168,7 +168,7 @@ export function ListingCard({
 <Card className=" flex flex-col justify-between h-full hover:shadow-md transition-shadow duration-200">
   {/* Entire clickable area except the footer */}
   <div className="flex-1">
-    <Link href={`/listings/${listing.id}`} className="block h-full">
+    <Link href={`/listings/${listing.id}`} className="block h-full cursor-pointer">
       <CardContent className="p-6 h-full flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-start gap-4">

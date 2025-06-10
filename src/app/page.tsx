@@ -1,7 +1,7 @@
 'use client';
 
 // import { HeroSection } from '@/components/home/HeroSection';
-import SearchSection from '@/components/home/SearchSection';
+import SearchSection from '@/components/home/homepage';
 import UpsellSection from '@/components/home/UpsellSection';
 
 import { ListingsProvider } from '@/contexts/listings-context';
