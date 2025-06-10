@@ -5,7 +5,7 @@ import {
   useReactTable,
   CellContext,
 } from '@tanstack/react-table';
-import { Plus, Shield, Clock, TrendingUp, AlertCircle, Star, CheckCircle2, Users, Lock } from 'lucide-react';
+import { Plus, Clock, AlertCircle, Star, CheckCircle2, Users, Lock } from 'lucide-react';
 import { ListingPreviewProps, Listing } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -280,7 +280,7 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
               variants={itemVariants}
               className="flex items-center space-x-2 mb-2"
             >
-              <h1 className="text-2xl font-bold text-gray-900 truncate">{listing.title}</h1>
+              <h1 className="text-4xl font-bold text-gray-900 truncate">{listing.title}</h1>
               <motion.div variants={badgeVariants}>
                 <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
@@ -290,47 +290,17 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             </motion.div>
             <motion.p 
               variants={itemVariants}
-              className="text-gray-600 line-clamp-2"
+              className="text-muted-foreground  text-base leading-relaxed max-w-3xl"
             >
               {listing.description}
             </motion.p>
           </div>
-          <motion.div variants={badgeVariants} className="flex flex-col items-end gap-2">
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              <Lock className="w-3 h-3 mr-1" />
+          <motion.div variants={badgeVariants} className="flex flex-col items-end gap-3">
+            <Badge variant="outline" className="bg-amber-50/80 text-amber-700 border-amber-200/50 px-4 py-2 backdrop-blur-sm">
+              <Lock className="w-4 h-4 mr-2" />
               Limited Availability
             </Badge>
-       
           </motion.div>
-        </div>
-      </motion.div>
-
-      {/* Metadata Tags */}
-      <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="p-6 border-b border-gray-100 bg-gray-50"
-      >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: TrendingUp, label: 'Niche', value: listing.metadata.niche, color: 'text-amber-500' },
-            { icon: Shield, label: 'Source', value: listing.metadata.source, color: 'text-emerald-500' },
-            { icon: Clock, label: 'Freshness', value: listing.metadata.freshness, color: 'text-sky-500' },
-            { icon: Star, label: 'Exclusivity', value: listing.metadata.exclusivityLevel, color: 'text-amber-500' }
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="flex items-center space-x-2"
-            >
-              <item.icon className={`h-5 w-5 ${item.color}`} />
-              <div className="min-w-0">
-                <p className="text-sm text-gray-500">{item.label}</p>
-                <p className="font-medium text-gray-900 truncate">{item.value}</p>
-              </div>
-            </motion.div>
-          ))}
         </div>
       </motion.div>
 
@@ -339,9 +309,9 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-b border-gray-100"
+        className="p-4 border-b border-gray-100/50 bg-gradient-to-br from-gray-50/30 via-white to-gray-50/30"
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
             {
               label: 'Quality Score',
@@ -372,19 +342,19 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
             <motion.div
               key={stat.label}
               variants={itemVariants}
-              className="flex flex-col"
+              className="flex flex-col p-6 rounded-2xl bg-white/80 backdrop-blur-sm shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 border border-gray-100/50"
             >
-              <p className="text-sm text-gray-500">{stat.label}</p>
-              <div className="flex items-center space-x-2">
+              <p className="text-sm font-medium text-gray-500 mb-4">{stat.label}</p>
+              <div className="flex items-center space-x-4">
                 {stat.progress ? (
                   <>
-                    <Progress value={stat.value} className="w-20 h-2" />
-                    <span className="font-medium text-gray-900">{stat.value}/100</span>
+                    <Progress value={stat.value} className="w-32 h-1.5 bg-gray-100/50" />
+                    <span className="font-semibold text-gray-900">{stat.value}/100</span>
                   </>
                 ) : (
                   <>
                     <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                    <span className="font-medium text-gray-900">{stat.value}</span>
+                    <span className="font-semibold text-gray-900">{stat.value}</span>
                   </>
                 )}
               </div>
@@ -398,58 +368,72 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-b border-gray-100"
+        className="p-12 border-b border-gray-100/50"
       >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10 mb-10">
           <motion.div variants={itemVariants}>
-            <h2 className="text-lg font-semibold text-gray-900">Preview Records</h2>
-            <p className="text-sm text-gray-500">Sample of verified contacts from this exclusive list</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Instant Access to Premium Contacts</h2>
+            <p className="text-gray-600 text-lg">Exclusive verified contacts with instant enrichment options</p>
           </motion.div>
-  
-               <Button 
-              variant="outline"
-              className="border-orange-200 text-orange-600 hover:bg-orange-50"
-              onClick={handleEnrichmentsClick}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Enrichments
-            </Button>
+    
+          <Button 
+            variant="outline"
+            className="border-orange-200/50 text-orange-600 hover:bg-orange-50/50 hover:scale-[1.02] transition-all duration-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] px-8 py-3 backdrop-blur-sm"
+            onClick={handleEnrichmentsClick}
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Unlock Premium Enrichments
+          </Button>
         </div>
 
         <motion.div 
           variants={containerVariants}
-          className="overflow-x-auto rounded-lg border border-gray-200"
+          className="overflow-x-auto rounded-2xl border border-gray-200/50 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
         >
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200/50 text-sm">
+            <thead className="bg-gray-50/50 backdrop-blur-sm">
               {table.getHeaderGroups().map((headerGroup) => (
                 <motion.tr key={headerGroup.id} variants={itemVariants}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-8 py-5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
+                  <th className="px-8 py-5 text-left text-xs font-semibold text-orange-600 uppercase tracking-wider bg-orange-50/30 backdrop-blur-sm">
+                    Premium Enrichments
+                  </th>
                 </motion.tr>
               ))}
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white/80 backdrop-blur-sm divide-y divide-gray-200/50">
               {table.getRowModel().rows.map((row) => (
                 <motion.tr 
                   key={row.id} 
                   variants={itemVariants}
-                  className="hover:bg-gray-50"
+                  className="hover:bg-gray-50/30 transition-colors duration-200"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-700"
+                      className="px-8 py-5 whitespace-nowrap text-sm text-gray-700"
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
+                  <td className="px-8 py-5 whitespace-nowrap text-sm bg-orange-50/30">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-orange-600 hover:text-orange-700 hover:bg-orange-100/30 transition-all duration-200"
+                      onClick={handleEnrichmentsClick}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add
+                    </Button>
+                  </td>
                 </motion.tr>
               ))}
             </tbody>
@@ -462,10 +446,10 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-b border-gray-100 bg-gray-50"
+        className="p-12 border-b border-gray-100/50 bg-gradient-to-br from-gray-50/30 via-white to-gray-50/30"
       >
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Suggested Lists</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Suggested Lists</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {suggestedLists.map((suggestedListing) => (
             <ListingCard 
               key={suggestedListing.id}
@@ -482,14 +466,18 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-b border-gray-100"
+        className="p-12 border-b border-gray-100/50"
       >
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Frequently Asked Questions</h2>
-        <Accordion type="single" collapsible className="w-full">
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Frequently Asked Questions</h2>
+        <Accordion type="single" collapsible className="w-full space-y-4">
           {faqItems.map((item, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger>{item.question}</AccordionTrigger>
-              <AccordionContent>{item.answer}</AccordionContent>
+            <AccordionItem 
+              key={index} 
+              value={`item-${index}`}
+              className="border border-gray-200/50 rounded-2xl px-6 hover:shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all duration-300 bg-white/80 backdrop-blur-sm"
+            >
+              <AccordionTrigger className="text-lg font-medium py-5">{item.question}</AccordionTrigger>
+              <AccordionContent className="text-gray-600 pb-5">{item.answer}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
@@ -500,48 +488,55 @@ export default function ListingPreview({ listing }: ListingPreviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 border-t border-gray-100 bg-gray-50"
+        className="p-12 border-t border-gray-100/50 bg-gradient-to-br from-gray-50/30 via-white to-gray-50/30"
       >
         <div className="max-w-2xl mx-auto">
-          <motion.div variants={itemVariants} className="mb-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-              <span>Limited Availability</span>
-              <span>{listing.stats.remainingCount} spots left</span>
+          <motion.div variants={itemVariants} className="mb-8">
+            <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+              <span className="font-medium">Limited Availability</span>
+              <span className="font-medium">{listing.stats.remainingCount} spots left</span>
             </div>
-            <Progress value={(listing.stats.totalCount - listing.stats.remainingCount) / listing.stats.totalCount * 100} className="h-2" />
+            <Progress value={(listing.stats.totalCount - listing.stats.remainingCount) / listing.stats.totalCount * 100} className="h-1.5 bg-gray-100/50" />
           </motion.div>
-     <motion.div
-  variants={itemVariants}
-  className="fixed bottom-0 inset-x-0 z-50 flex justify-center backdrop-blur-sm bg-white/80 border-t border-gray-200 px-4 py-4"
+        </div>
+      </motion.div>
+
+{/* Sexy Fixed Bottom CTA */}
+<motion.div
+  initial={{ y: 100, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  exit={{ y: 100, opacity: 0 }}
+  transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+  className="fixed bottom-0 inset-x-0 z-50 bg-white/80 backdrop-blur-md border-t border-gray-200 px-6 py-5 shadow-[0_-12px_20px_rgba(0,0,0,0.05)]"
 >
-  <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl">
+  <div className="mx-auto flex w-full max-w-4xl flex-col sm:flex-row items-center gap-4">
+    
     <Button
       onClick={handleRequestList}
       disabled={isLoading}
-      className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+      className=" cursor-pointer w-full sm:w-auto flex-1 text-lg py-5 rounded-xl bg-[#fb923c] hover:bg-[#f97316] text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
     >
       {isLoading ? (
-        <div className="flex items-center space-x-2">
-          <Skeleton className="h-4 w-4 rounded-full" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-4 w-4 rounded-full bg-white/60" />
           <span>Processing...</span>
         </div>
       ) : (
         'Request This List'
       )}
     </Button>
+
     <Button
-      variant="outline"
-      className="flex-1 border-orange-200 text-orange-600 hover:bg-orange-50"
+      variant="ghost"
       onClick={handleEnrichmentsClick}
+      className="cursor-pointer w-full sm:w-auto flex-1 text-lg py-5 rounded-xl border border-[#f97316] text-[#f97316] hover:bg-orange-50 font-semibold transition-all duration-300"
     >
-      <Plus className="h-4 w-4 mr-2" />
+      <Plus className="h-5 w-5 mr-2" />
       Add Enrichments
     </Button>
   </div>
 </motion.div>
 
-        </div>
-      </motion.div>
 
       <EnrichmentsPopup
         isOpen={showEnrichments}
