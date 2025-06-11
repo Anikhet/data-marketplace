@@ -2,7 +2,7 @@ import { Listing } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { Badge } from "../ui/badge";
-import { Star, Clock, TrendingUp, Lock, Sparkles, Target, Users, CheckCircle2, AlertCircle } from "lucide-react";
+import { Star, Clock, TrendingUp, Lock, Sparkles, Target, Users, CheckCircle2, AlertCircle, Verified } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth-context";
 import Image from "next/image";
@@ -165,92 +165,96 @@ export function ListingCard({
   };
 
   return (
-<Card className=" flex flex-col justify-between h-full hover:shadow-md transition-shadow duration-200">
-  {/* Entire clickable area except the footer */}
-  <div className="flex-1">
-    <Link href={`/listings/${listing.id}`} className="block h-full cursor-pointer">
-      <CardContent className="p-6 h-full flex flex-col gap-4">
-        {/* Header */}
-        <div className="flex items-start gap-4">
-          <div className="relative w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
-            {!imageError ? (
-              <Image
-                src={getProfileImageUrl(listing.seller.name)}
-                alt={`${listing.seller.name}'s profile`}
-                fill
-                className="object-cover"
-                onError={() => setImageError(true)}
-                sizes="48px"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500 text-xl font-bold">
-                {listing.seller.name.charAt(0)}
+    <Card className="flex flex-col justify-between h-full hover:shadow-md transition-shadow duration-200 relative">
+      {/* Verification Badge */}
+      {listing.isVerified && (
+        <div className="absolute top-3 right-3 z-10">
+          <div className="bg-emerald-50 text-emerald-700 p-1.5 rounded-full border border-emerald-200">
+            <Verified className="h-4 w-4" />
+          </div>
+        </div>
+      )}
+
+      {/* Entire clickable area except the footer */}
+      <div className="flex-1">
+        <Link href={`/listings/${listing.id}`} className="block h-full cursor-pointer">
+          <CardContent className="p-6 h-full flex flex-col gap-4">
+            {/* Header */}
+            <div className="flex items-start gap-4">
+              <div className="relative w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+                {!imageError ? (
+                  <Image
+                    src={getProfileImageUrl(listing.seller.name)}
+                    alt={`${listing.seller.name}'s profile`}
+                    fill
+                    className="object-cover"
+                    onError={() => setImageError(true)}
+                    sizes="48px"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-500 text-xl font-bold">
+                    {listing.seller.name.charAt(0)}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors truncate">
-              {listing.title}
-            </h3>
-            <p className="text-sm text-muted-foreground truncate">
-              by {listing.seller.name} ★ {listing.seller.rating}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors truncate">
+                  {listing.title}
+                </h3>
+                <p className="text-sm text-muted-foreground truncate">
+                  by {listing.seller.name} ★ {listing.seller.rating}
+                </p>
+              </div>
+            </div>
+
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2.5">
+              {getUniqueBadges(listing)}
+            </div>
+
+            {/* Description */}
+            <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+              {listing.description}
             </p>
-          </div>
-        </div>
 
-        {/* Badges */}
-        <div className="flex flex-wrap gap-2.5">
-          {getUniqueBadges(listing)}
-        </div>
+            {/* Metadata */}
+            <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-auto">
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Industry</span>
+                <span className="font-medium text-gray-900 truncate mt-1">{listing.industry}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Volume</span>
+                <span className="font-medium text-gray-900 truncate mt-1">{listing.volume}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Link>
+      </div>
 
-        {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-          {listing.description}
-        </p>
-
-        {/* Metadata */}
-        <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-auto">
-          <div className="flex flex-col">
-            <span className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Industry</span>
-            <span className="font-medium text-gray-900 truncate mt-1">{listing.industry}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Volume</span>
-            <span className="font-medium text-gray-900 truncate mt-1">{listing.volume}</span>
-          </div>
-        </div>
-      </CardContent>
-    </Link>
-  </div>
-
-  {/* CTA Footer - not inside Link */}
-  <div className="p-5 border-t border-gray-100 bg-white flex items-center justify-center">
-    <InteractiveHoverButton
-      // className="bg-orange-500 hover:bg-orange-600 text-white transition-colors px-4 py-2 text-sm"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!isAuthenticated) {
-          showAuthModal();
-          return;
-        }
-        onRequestList(listing.id);
-      }}
-
-      disabled={isLoading}
-      onMouseEnter={() =>
-  setButtonText(
-    listing.price ? `$${listing.price}` : "Request List"
-  )
-}
-
-      onMouseLeave={() => setButtonText("Request List")}
-    >
-      {buttonText}
-    </ InteractiveHoverButton>
-  </div>
-</Card>
-
-
+      {/* CTA Footer - not inside Link */}
+      <div className="p-5 border-t border-gray-100 bg-white flex items-center justify-center">
+        <InteractiveHoverButton
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!isAuthenticated) {
+              showAuthModal();
+              return;
+            }
+            onRequestList(listing.id);
+          }}
+          disabled={isLoading}
+          onMouseEnter={() =>
+            setButtonText(
+              listing.price ? `$${listing.price}` : "Request List"
+            )
+          }
+          onMouseLeave={() => setButtonText("Request List")}
+        >
+          {buttonText}
+        </InteractiveHoverButton>
+      </div>
+    </Card>
   );
 }

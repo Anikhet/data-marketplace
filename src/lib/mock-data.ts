@@ -27,8 +27,8 @@ export const mockListings: Listing[] = [
       lastSoldCount: 45,
       qualityScore: 92,
       totalCount: 1000,
-      remainingCount: 250,
-      lastUpdated: '2024-03-15'
+      remainingCount: 5,
+      lastUpdated: 'March 15, 2024'
     },
     previewRecords: [
       {
@@ -65,8 +65,8 @@ export const mockListings: Listing[] = [
       lastSoldCount: 78,
       qualityScore: 88,
       totalCount: 5000,
-      remainingCount: 1200,
-      lastUpdated: '2024-03-10'
+      remainingCount: 2,
+      lastUpdated: 'March 10, 2024'
     },
     previewRecords: [
       {
@@ -103,8 +103,8 @@ export const mockListings: Listing[] = [
       lastSoldCount: 120,
       qualityScore: 95,
       totalCount: 2000,
-      remainingCount: 500,
-      lastUpdated: '2024-03-14'
+      remainingCount: 10,
+      lastUpdated: 'March 20, 2024'
     },
     previewRecords: [
       {
@@ -141,8 +141,8 @@ export const mockListings: Listing[] = [
       lastSoldCount: 23,
       qualityScore: 85,
       totalCount: 800,
-      remainingCount: 400,
-      lastUpdated: '2024-03-01'
+      remainingCount: 4,
+      lastUpdated: 'March 1, 2024'
     },
     previewRecords: [
       {
@@ -179,8 +179,8 @@ export const mockListings: Listing[] = [
       lastSoldCount: 56,
       qualityScore: 90,
       totalCount: 3000,
-      remainingCount: 1500,
-      lastUpdated: '2024-03-12'
+      remainingCount: 15,
+      lastUpdated: 'March 10, 2024'
     },
     previewRecords: [
       {
@@ -217,8 +217,8 @@ export const mockListings: Listing[] = [
       lastSoldCount: 34,
       qualityScore: 89,
       totalCount: 4000,
-      remainingCount: 2000,
-      lastUpdated: '2024-03-08'
+      remainingCount: 1,
+      lastUpdated: 'March 10, 2024'
     },
     previewRecords: [
       {

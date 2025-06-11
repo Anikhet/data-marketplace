@@ -54,7 +54,7 @@ export function HeroSection() {
         " pb-0"
       )}
     >
-      <div className="mx-auto flex max-w-7xl flex-col gap-12 pt-10 sm:gap-24  h-screen ">
+      <div className="mx-auto flex max-w-7xl flex-col gap-12 pt-10 sm:gap-24  h-[90vh] ">
         <div className="flex flex-col items-center gap-6 text-center sm:gap-12">
           {/* Badge */}
           {badge && (

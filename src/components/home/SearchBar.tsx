@@ -270,25 +270,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
 
 
 
-      {/* 🗂 Category Selection Tabs */}
-      <div className="mt-8 flex flex-wrap justify-center gap-3 px-4">
-        {["Campaigns", "Lists", "Automations", "Scrapers", "Copywriting"].map(
-          (category) => (
-            <button
-              key={category}
-              onClick={() => {
-                onSearch(category.toLowerCase());
-                setQuery(category);
-                setShowSuggestions(false);
-                inputRef.current?.focus();
-              }}
-              className="px-5 py-2.5 rounded-full border border-orange-300 text-orange-700 font-medium bg-white hover:bg-orange-50 transition-all shadow-sm"
-            >
-              {category}
-            </button>
-          )
-        )}
-      </div>
+
       {/* Suggestions Dropdown */}
       {showSuggestions &&
         suggestions.length > 0 &&

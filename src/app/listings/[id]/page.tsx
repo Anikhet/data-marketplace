@@ -5,7 +5,7 @@ import { Listing } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
 import ListingPreview from '@/components/listings/ListingPreview';
-
+import { mockListings } from '@/lib/mock-data';
 
 export default function ListingPage() {
   const params = useParams();
@@ -17,80 +17,22 @@ export default function ListingPage() {
 
   useEffect(() => {
     const fetchListing = async () => {
-
-       window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       try {
         setIsLoading(true);
         setError(null);
         
-        // TODO: Replace with actual API call
-        // For now, using mock data
-        const mockListing: Listing = {
-          id: listingId,
-          title: 'Tech Industry C-Level Executives 2024',
-          description: 'A comprehensive list of C-level executives from leading technology companies, including CEOs, CTOs, and CFOs.',
-          industry: 'Technology',
-          jobTitle: 'C-Level',
-          volume: '1000',
-          type: 'Email',
-          price: 999,
-          isVerified: true,
-          seller: {
-            id: '1',
-            name: 'DataPro Solutions',
-            rating: 4.8,
-          },
-          metadata: {
-            niche: 'Technology',
-            source: 'Verified Company Websites',
-            freshness: 'Updated Weekly',
-            exclusivityLevel: 'Premium',
-          },
-          previewRecords: [
-            {
-              name: 'John Smith',
-              title: 'CEO',
-              company: 'TechCorp Inc.',
-              email: 'john.smith@techcorp.com',
-            },
-            {
-              name: 'Sarah Johnson',
-              title: 'CTO',
-              company: 'InnovateTech',
-              email: 'sarah.j@innovatetech.com',
-            },
-            {
-              name: 'Michael Chen',
-              title: 'CFO',
-              company: 'Future Systems',
-              email: 'mchen@futuresystems.com',
-            },
-            {
-              name: 'Emily Davis',
-              title: 'CEO',
-              company: 'DataFlow Solutions',
-              email: 'emily.d@dataflow.com',
-            },
-            {
-              name: 'Robert Wilson',
-              title: 'CTO',
-              company: 'CloudTech',
-              email: 'rwilson@cloudtech.com',
-            },
-          ],
-          stats: {
-            rating: 4.8,
-            lastSoldCount: 45,
-            qualityScore: 92,
-            totalCount: 1000,
-            remainingCount: 250,
-            lastUpdated: '2024-03-15'
-          }
-        };
-
+        // Find the listing from mock data
+        const foundListing = mockListings.find(l => l.id === listingId);
+        
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
-        setListing(mockListing);
+        
+        if (!foundListing) {
+          throw new Error('Listing not found');
+        }
+        
+        setListing(foundListing);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch listing');
       } finally {
