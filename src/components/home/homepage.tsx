@@ -3,12 +3,13 @@ import { HeroSection } from "./HeroSection";
 import { useListingsContext } from "@/contexts/listings-context";
 import { ListingsGrid } from "./ListingGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { List, Target, Bot, Zap } from "lucide-react";
+import { List, Target, Bot, Zap, Users } from "lucide-react";
 import { useState } from "react";
 // import { ListsGrid } from "../grids/ListsGrid";
 import { CampaignsGrid } from "../grids/CampaignsGrid";
 import { ScrapersGrid } from "../grids/ScrapersGrid";
 import { AutomationsGrid } from "../grids/AutomationsGrid";
+import { ExpertsGrid } from "../grids/ExpertsGrid";
 
 export default function SearchSection() {
   const {
@@ -20,7 +21,7 @@ export default function SearchSection() {
     activeFilters,
   } = useListingsContext();
 
-  const [activeTab, setActiveTab] = useState<'lists' | 'campaigns' | 'scrapers' | 'automations'>('lists');
+  const [activeTab, setActiveTab] = useState<'lists' | 'campaigns' | 'scrapers' | 'automations' | 'experts'>('lists');
 
   const activeFilterCount = Object.values(activeFilters).reduce(
     (count, value) => {
@@ -68,6 +69,10 @@ export default function SearchSection() {
                   <Zap className="w-4 h-4" />
                   Automations
                 </TabsTrigger>
+                <TabsTrigger value="experts" className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Experts
+                </TabsTrigger>
               </TabsList>
 
               {activeTab === 'lists' && (
@@ -83,6 +88,7 @@ export default function SearchSection() {
               {activeTab === 'campaigns' && <CampaignsGrid />}
               {activeTab === 'scrapers' && <ScrapersGrid />}
               {activeTab === 'automations' && <AutomationsGrid />}
+              {activeTab === 'experts' && <ExpertsGrid />}
             </Tabs>
           </div>
         </div>

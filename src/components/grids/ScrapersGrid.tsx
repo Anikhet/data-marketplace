@@ -32,7 +32,7 @@ const mockScrapers: GridItem[] = [
     status: 'pending',
     lastUpdated: '2024-03-18',
     tags: ['Business', 'Reviews', 'Location'],
-    imageUrl: 'https://images.unsplash.com/photo-1569336415962-a4bd9f69c07b?q=80&w=1932&auto=format&fit=crop',
+    imageUrl: 'https://unsplash.com/photos/google-sign-fpZZEV0uQwA',
     imageAlt: 'Google Maps Business Data'
   },
   {
